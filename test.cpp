@@ -1,45 +1,15 @@
 #include "DCT2.h"
 #include "include/Eigen/Core"
-#include <gtkmm-3.0/gtkmm.h>
 
 #include <iostream>
 #include <chrono>
 #include <random>
 
-static void
-activate(GtkApplication *app, gpointer user_data)
+int main()
 {
-  GtkWidget *window;
-  GtkWidget *button;
-  GtkWidget *button_box;
-
-  window = gtk_application_window_new(app);
-  gtk_window_set_title(GTK_WINDOW(window), "Window");
-  gtk_window_set_default_size(GTK_WINDOW(window), 200, 200);
-
-  button_box = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
-  gtk_container_add (GTK_CONTAINER (window), button_box);
-
-  button = gtk_file_chooser_button_new (("Select a file"),
-                                        GTK_FILE_CHOOSER_ACTION_OPEN);
-  gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (button),
-                                       "./");
-  gtk_container_add (GTK_CONTAINER (button_box), button);
-
-  gtk_widget_show_all(window);
-}
-
-int main(int argc, char **argv)
-{
-  GtkApplication *app;
-  int status;
-
-  app = gtk_application_new("org.gtk.example", G_APPLICATION_FLAGS_NONE);
-  g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
-  status = g_application_run(G_APPLICATION(app), argc, argv);
-  g_object_unref(app);
-
-  return status;
+  std::cout << "Optimal parallel size: " << DCT2::findParallelSize() << std::endl << std::endl;
+  test_project_matrix();
+  return 0;
 }
 
 void test_project_matrix()
