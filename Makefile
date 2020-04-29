@@ -3,10 +3,10 @@ OBJECTS = test.o DCT2.o
 EXEC = test
 
 $(EXEC): $(OBJECTS)
-	g++ -o $@ $^ -O3 `pkg-config --libs --cflags gtkmm-3.0`
+	g++ -o $@ $^ -O3
 
 %.o : %.cpp
-	g++ -c -o $@ $< -O3 `pkg-config --libs --cflags gtkmm-3.0`
+	g++ -c -o $@ $< -O3
 
 clean:
 	rm $(OBJECTS) $(EXEC)
