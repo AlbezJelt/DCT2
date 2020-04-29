@@ -5,13 +5,6 @@
 #include <chrono>
 #include <random>
 
-int main()
-{
-  std::cout << "Optimal parallel size: " << DCT2::findParallelSize() << std::endl << std::endl;
-  test_project_matrix();
-  return 0;
-}
-
 void test_project_matrix()
 {
   Eigen::MatrixXd test(8, 8);
@@ -36,3 +29,11 @@ void test_project_matrix()
   std::cout << testDCT2_after_IDCT2 << std::endl
             << std::endl;
 }
+
+int main()
+{
+  //std::cout << "Optimal parallel size: " << DCT2::findParallelSize() << std::endl << std::endl;
+  test_project_matrix();
+  return 0;
+}
+
