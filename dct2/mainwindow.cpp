@@ -6,6 +6,8 @@
 #include <QLabel>
 #include <QIntValidator>
 #include <QMessageBox>
+#include <QVBoxLayout>
+#include <QGridLayout>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
