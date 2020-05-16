@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <QBitmap>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,6 +35,10 @@ void MainWindow::openBMP()
     QPixmap pixmap = QPixmap(fname);
 
     ui->img->setPixmap(QPixmap(pixmap)); //Verifico caricamento immagine visualizzandola
+
+    //Converto in bitmap
+    QBitmap bpm = QBitmap(pixmap);
+
 }
 
 void MainWindow::on_parameters_clicked()
