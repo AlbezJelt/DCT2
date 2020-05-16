@@ -16,9 +16,12 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
-
     void on_parameters_clicked();
+    void openBMP();
+
+    void on_actionClose_triggered();
+
+    void on_actionOpen_triggered();
 
 private:
     Ui::MainWindow *ui;

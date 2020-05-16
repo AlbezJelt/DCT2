@@ -209,3 +209,9 @@ int DCT2::findParallelSize(int nTest, double dist)
 
     return (int) trunc(mean);
 }
+
+Eigen::MatrixXi DCT2::DCTCompress(Eigen::MatrixXi &_m, double f, double s)
+{
+    Eigen::MatrixXi out;
+    return out;
+}

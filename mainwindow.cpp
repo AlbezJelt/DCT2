@@ -15,6 +15,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->scrollArea->takeWidget();
+    ui->scrollArea->setWidget(ui->img);
+    ui->img->setBackgroundRole(QPalette::Base);
+    ui->img->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    ui->img->setScaledContents(true);
 }
 
 MainWindow::~MainWindow()
@@ -22,15 +27,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-void MainWindow::on_pushButton_clicked()
+void MainWindow::openBMP()
 {
     QString fname = QFileDialog::getOpenFileName(this, tr("Select image"), "/git/dct2", tr("Image Files (*.bmp)"));
 
     QPixmap pixmap = QPixmap(fname);
 
     ui->img->setPixmap(QPixmap(pixmap)); //Verifico caricamento immagine visualizzandola
-
 }
 
 void MainWindow::on_parameters_clicked()
@@ -46,4 +49,15 @@ void MainWindow::on_parameters_clicked()
         msgBox.setText("Parametro non valido");
         msgBox.exec();
     }
+
+}
+
+void MainWindow::on_actionClose_triggered()
+{
+    QApplication::quit();
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    openBMP();
 }

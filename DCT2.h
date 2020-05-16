@@ -11,6 +11,8 @@ Eigen::MatrixXd DCT2_mt(Eigen::MatrixXd &_m);
 Eigen::MatrixXd IDCT2(Eigen::MatrixXd &_m);
 Eigen::MatrixXd IDCT2_mt(Eigen::MatrixXd &_m);
 
+Eigen::MatrixXi DCTCompress(Eigen::MatrixXi &_m, double f, double s);
+
 void DCT(Eigen::VectorXd &_v);
 void IDCT(Eigen::VectorXd &_v);
 

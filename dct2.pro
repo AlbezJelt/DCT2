@@ -335,3 +335,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     include/Eigen/CMakeLists.txt
+
+QMAKE_CXXFLAGS += -fopenmp
+LIBS += -fopenmp
+
+RESOURCES +=
