@@ -24,14 +24,17 @@ void test::test_project_matrix()
   Eigen::MatrixXd test_after_DCT2 = DCT2::DCT2_mt(test);
   Eigen::MatrixXd testDCT2_after_IDCT2 = DCT2::IDCT2_mt(test_after_DCT2);
 
-  std::cout << test << std::endl
-            << std::endl;
-  std::cout << test_after_DCT2 << std::endl
-            << std::endl;
-  std::cout << testDCT2_after_IDCT2 << std::endl
-            << std::endl;
+//  std::cout << test << std::endl
+//            << std::endl;
+//  std::cout << test_after_DCT2 << std::endl
+//            << std::endl;
+//  std::cout << testDCT2_after_IDCT2 << std::endl
+//            << std::endl;
 
   Eigen::MatrixXi prova = Compress::DCTCompress(test.cast<int>(), 3, 3);
+  std::cout << "Final matrix" << std::endl;
+  std::cout << prova << std::endl
+            << std::endl;
 }
 
 void test::prova()

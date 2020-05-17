@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "include/Eigen/Core"
-#include"Compress.h"
+#include "Compress.h"
 #include "DCT2.h"
 #include <QFileDialog>
 #include <QImage>
@@ -57,7 +57,7 @@ void MainWindow::on_parameters_clicked()
     }
 
      const QPixmap* p = ui->img->pixmap();
-     int** m = pixmapToMatrix(p);
+     Eigen::MatrixXi m = pixmapToMatrix(p);
      Eigen::MatrixXi prova = Compress::DCTCompress(m, F, d);
 }
 
