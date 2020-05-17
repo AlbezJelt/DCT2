@@ -1,11 +1,13 @@
 #include "DCT2.h"
 #include "include/Eigen/Core"
+#include "Compress.h"
+#include "test.h"
 
 #include <iostream>
 #include <chrono>
 #include <random>
 
-void test_project_matrix()
+void test::test_project_matrix()
 {
   Eigen::MatrixXd test(8, 8);
   test << 231, 247, 234, 193, 11, 97, 193, 87,
@@ -28,12 +30,11 @@ void test_project_matrix()
             << std::endl;
   std::cout << testDCT2_after_IDCT2 << std::endl
             << std::endl;
+
+  Eigen::MatrixXi prova = Compress::DCTCompress(test.cast<int>(), 3, 3);
 }
 
-int main()
+void test::prova()
 {
-  //std::cout << "Optimal parallel size: " << DCT2::findParallelSize() << std::endl << std::endl;
-  test_project_matrix();
-  return 0;
+    std::cout << "prova" << std::endl;
 }
-
