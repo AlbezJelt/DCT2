@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "include/Eigen/Core"
+#include"Compress.h"
+#include "DCT2.h"
 #include <QFileDialog>
 #include <QImage>
 #include <QPixmap>
@@ -36,7 +39,6 @@ void MainWindow::openBMP()
 
     ui->img->setPixmap(QPixmap(pixmap)); //Verifico caricamento immagine visualizzandola
 
-    pixmapToMatrix(pixmap);
 
 }
 
@@ -54,7 +56,9 @@ void MainWindow::on_parameters_clicked()
         msgBox.exec();
     }
 
-
+     const QPixmap* p = ui->img->pixmap();
+     int** m = pixmapToMatrix(p);
+     Eigen::MatrixXi prova = Compress::DCTCompress(m, F, d);
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -67,9 +71,9 @@ void MainWindow::on_actionOpen_triggered()
     openBMP();
 }
 
-int** MainWindow::pixmapToMatrix(QPixmap p)
+int** MainWindow::pixmapToMatrix(const QPixmap* p)
 {
-    QImage image = p.toImage();
+    QImage image = p->toImage();
    int **matrix;
 
     //https://forum.qt.io/topic/68790/from-matrix-to-qimage-and-qpixmap/9
