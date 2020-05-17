@@ -36,8 +36,7 @@ void MainWindow::openBMP()
 
     ui->img->setPixmap(QPixmap(pixmap)); //Verifico caricamento immagine visualizzandola
 
-    //Converto in bitmap
-    QBitmap bpm = QBitmap(pixmap);
+    pixmapToMatrix(pixmap);
 
 }
 
@@ -55,6 +54,7 @@ void MainWindow::on_parameters_clicked()
         msgBox.exec();
     }
 
+
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -65,4 +65,23 @@ void MainWindow::on_actionClose_triggered()
 void MainWindow::on_actionOpen_triggered()
 {
     openBMP();
+}
+
+int** MainWindow::pixmapToMatrix(QPixmap p)
+{
+    QImage image = p.toImage();
+   int **matrix;
+
+    //https://forum.qt.io/topic/68790/from-matrix-to-qimage-and-qpixmap/9
+
+    matrix = new int *[image.width()];
+    for(int i=0;i<image.width();++i)
+    matrix[i] = new int [image.height()];
+
+    for(int i=0;i<image.width();++i){
+        for(int j=0;j<image.height();++j){
+            matrix[i][j]=qGray(image.pixel(i,j));    }
+        }
+
+    return matrix;
 }

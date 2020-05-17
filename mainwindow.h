@@ -18,6 +18,7 @@ public:
 private slots:
     void on_parameters_clicked();
     void openBMP();
+    int** pixmapToMatrix(QPixmap p);
 
     void on_actionClose_triggered();
 
