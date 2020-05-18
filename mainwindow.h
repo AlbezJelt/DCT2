@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "include/Eigen/Core"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,7 +19,8 @@ public:
 private slots:
     void on_parameters_clicked();
     void openBMP();
-    int** pixmapToMatrix(const QPixmap* p);
+    Eigen::MatrixXi pixmapToMatrix(const QPixmap* p);
+    QImage matrixToPixmap(Eigen::MatrixXi m);
 
     void on_actionClose_triggered();
 

@@ -59,6 +59,8 @@ void MainWindow::on_parameters_clicked()
      const QPixmap* p = ui->img->pixmap();
      Eigen::MatrixXi m = pixmapToMatrix(p);
      Eigen::MatrixXi prova = Compress::DCTCompress(m, F, d);
+     QImage result = matrixToPixmap(prova);
+     ui->img_2->setPixmap(QPixmap::fromImage(result));
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -71,21 +73,33 @@ void MainWindow::on_actionOpen_triggered()
     openBMP();
 }
 
-int** MainWindow::pixmapToMatrix(const QPixmap* p)
+Eigen::MatrixXi MainWindow::pixmapToMatrix(const QPixmap* p)
 {
     QImage image = p->toImage();
-   int **matrix;
+    Eigen::MatrixXi matrix(image.width(), image.height()); //For matrices, the number of rows is always passed first.
 
     //https://forum.qt.io/topic/68790/from-matrix-to-qimage-and-qpixmap/9
 
-    matrix = new int *[image.width()];
-    for(int i=0;i<image.width();++i)
-    matrix[i] = new int [image.height()];
-
     for(int i=0;i<image.width();++i){
         for(int j=0;j<image.height();++j){
-            matrix[i][j]=qGray(image.pixel(i,j));    }
+            matrix(i,j)=qGray(image.pixel(i,j));
         }
+     }
 
     return matrix;
+}
+
+QImage matrixToPixmap(Eigen::MatrixXi m){
+    int width = m.rows();
+    int height = m.cols();
+
+    QImage tmp(width, height, QImage::Format_Mono); //https://doc.qt.io/qt-5/qimage.html#Format-enum
+
+       for (int h=0; h<height; ++h) {
+           for (int w=0; w<width; ++w) {
+               tmp.setPixel(w, h, m(w,h));
+           }
+       }
+
+    return tmp;
 }
