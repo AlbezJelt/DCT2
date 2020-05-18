@@ -89,7 +89,7 @@ Eigen::MatrixXi MainWindow::pixmapToMatrix(const QPixmap* p)
     return matrix;
 }
 
-QImage matrixToPixmap(Eigen::MatrixXi m){
+QImage MainWindow::matrixToPixmap(Eigen::MatrixXi m){
     int width = m.rows();
     int height = m.cols();
 
