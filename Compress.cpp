@@ -31,59 +31,54 @@ Eigen::MatrixXi Compress::DCTCompress(const Eigen::MatrixXi &_m, const int f, co
 
     //Phase 1: calculate indices for blocking
     std::vector<std::pair<int, int>> indices;
-    for(int i = 0; i<out.cols(); i+=f)
+    for(int i = 0; i<out.rows(); i+=f)
     {
-        for(int k = 0; k<out.rows(); k+=f)
+        for(int k = 0; k<out.cols(); k+=f)
             indices.push_back(std::pair<int,int>(i, k));
     }
 
     //Phase 2: apply DCT2 on all calculated blocks
     std::vector<std::pair<int, int>>::iterator iter;
-//#pragma omp parallel for
+#pragma omp parallel for
     for (iter = indices.begin(); iter < indices.end(); iter++)
     {
+
+//        std::cout << "Computing:" << std::endl;
+//        std::cout << iter->first << " " << iter->second << std::endl << std::endl;
+
         Eigen::MatrixXd block = out.block(iter->first, iter->second, f, f);
 
         //DCT2
         Eigen::MatrixXd test_after_DCT2 = DCT2::DCT2_mt(block);
-        std::cout << "Print of block" << std::endl;
-        std::cout << test_after_DCT2 << std::endl
-                  << std::endl;
 
         //Taglio le frequenze
         for(int i = 0; i<test_after_DCT2.cols(); i++)
         {
             for(int j = 0; j<test_after_DCT2.rows(); j++) {
                 if(i + j >= d) {
-                    test_after_DCT2(i, j) = 0;
+                    test_after_DCT2(j, i) = 0;
                 }
             }
         }
 
-        std::cout << "Print of block with frequencesies cut" << std::endl;
-        std::cout << test_after_DCT2 << std::endl
-                  << std::endl;
-
         // IDCT2
         Eigen::MatrixXd testDCT2_after_IDCT2 = DCT2::IDCT2_mt(test_after_DCT2);
-        std::cout << "Print IDCT2" << std::endl;
-        std::cout << testDCT2_after_IDCT2 << std::endl
-                  << std::endl;
-
-        //Troncare double in int
-        for(int i=0; i<testDCT2_after_IDCT2.cols(); i++){
-            for(int j=0; j<testDCT2_after_IDCT2.rows(); j++) {
-                testDCT2_after_IDCT2(i,j) = round(testDCT2_after_IDCT2(i,j));
-            }
-        }
-        std::cout << "Print IDCT2 double2int" << std::endl;
-        std::cout << testDCT2_after_IDCT2 << std::endl
-                  << std::endl;
 
         out.block(iter->first, iter->second, f, f) = testDCT2_after_IDCT2;
-        std::cout << "Print out" << std::endl;
-        std::cout << out << std::endl
-                  << std::endl;
     }
+
+    //Troncare double in int
+    for(int i=0; i<out.cols(); i++){
+        for(int j=0; j<out.rows(); j++) {
+            out(j,i) = round(out(j,i));
+            if (out(j,i) > 255)
+            {
+                out(j,i) = 255;
+            } else if (out(j,i) < 0) {
+                out(j,i) = 0;
+            }
+        }
+    }
+
     return out.cast<int>().eval();
 }

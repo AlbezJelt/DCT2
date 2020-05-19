@@ -341,6 +341,7 @@ DISTFILES += \
     include/Eigen/CMakeLists.txt
 
 QMAKE_CXXFLAGS += -fopenmp
+QMAKE_CXXFLAGS_RELEASE *= -O3 -fopenmp
 LIBS += -fopenmp
 
 RESOURCES +=

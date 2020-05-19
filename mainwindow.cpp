@@ -24,6 +24,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->img->setBackgroundRole(QPalette::Base);
     ui->img->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     ui->img->setScaledContents(true);
+
+    ui->scrollArea_2->takeWidget();
+    ui->scrollArea_2->setWidget(ui->img_2);
+    ui->img_2->setBackgroundRole(QPalette::Base);
+    ui->img_2->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    ui->img_2->setScaledContents(true);
 }
 
 MainWindow::~MainWindow()
@@ -93,11 +99,11 @@ QImage MainWindow::matrixToPixmap(Eigen::MatrixXi m){
     int width = m.rows();
     int height = m.cols();
 
-    QImage tmp(width, height, QImage::Format_Mono); //https://doc.qt.io/qt-5/qimage.html#Format-enum
+    QImage tmp(width, height, QImage::Format_Grayscale8); //https://doc.qt.io/qt-5/qimage.html#Format-enum
 
        for (int h=0; h<height; ++h) {
            for (int w=0; w<width; ++w) {
-               tmp.setPixel(w, h, m(w,h));
+               tmp.setPixel(w, h, qRgb(m(w,h), m(w,h), m(w,h)));
            }
        }
 
