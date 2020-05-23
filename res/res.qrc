@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="bmp">bmp.png</file>
+        <file alias="open">folder.png</file>
+    </qresource>
+</RCC>

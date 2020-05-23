@@ -19,12 +19,8 @@
 */
 Eigen::MatrixXi Compress::DCTCompress(const Eigen::MatrixXi &_m, const int f, const int d)
 {
-    if(!(d>=0 && d<(2*f-2))) {
-        std::cout << "Your input is: f = " << f << ", d = " << d << std::endl;
-        std::cout << "d is not correct. It must be d = (2f - 2)" << std::endl
-                  << std::endl;
-        return _m;
-    }
+    if(!(f<=_m.rows() && f<=_m.cols()))
+        throw std::runtime_error(std::string("f must be <=image.width() and image.height()"));
 
     Eigen::MatrixXd out = _m.cast<double>();
     out.conservativeResize(f*trunc(out.rows()/f), f*trunc(out.cols()/f));
@@ -42,16 +38,12 @@ Eigen::MatrixXi Compress::DCTCompress(const Eigen::MatrixXi &_m, const int f, co
 #pragma omp parallel for
     for (iter = indices.begin(); iter < indices.end(); iter++)
     {
-
-//        std::cout << "Computing:" << std::endl;
-//        std::cout << iter->first << " " << iter->second << std::endl << std::endl;
-
         Eigen::MatrixXd block = out.block(iter->first, iter->second, f, f);
 
         //DCT2
         Eigen::MatrixXd test_after_DCT2 = DCT2::DCT2_mt(block);
 
-        //Taglio le frequenze
+        //Frequency cut
         for(int i = 0; i<test_after_DCT2.cols(); i++)
         {
             for(int j = 0; j<test_after_DCT2.rows(); j++) {
@@ -67,7 +59,7 @@ Eigen::MatrixXi Compress::DCTCompress(const Eigen::MatrixXi &_m, const int f, co
         out.block(iter->first, iter->second, f, f) = testDCT2_after_IDCT2;
     }
 
-    //Troncare double in int
+    //Truncate double
     for(int i=0; i<out.cols(); i++){
         for(int j=0; j<out.rows(); j++) {
             out(j,i) = round(out(j,i));

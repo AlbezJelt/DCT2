@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>BMP Processing</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="res/res.qrc">
+    <normaloff>:/icons/bmp</normaloff>:/icons/bmp</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -30,7 +34,7 @@
              <x>0</x>
              <y>0</y>
              <width>359</width>
-             <height>404</height>
+             <height>384</height>
             </rect>
            </property>
            <widget class="QLabel" name="img">
@@ -60,7 +64,7 @@
              <x>0</x>
              <y>0</y>
              <width>359</width>
-             <height>404</height>
+             <height>384</height>
             </rect>
            </property>
            <widget class="QLabel" name="img_2">
@@ -86,7 +90,7 @@
         <item>
          <widget class="QLabel" name="setF">
           <property name="text">
-           <string>set F</string>
+           <string>F</string>
           </property>
          </widget>
         </item>
@@ -96,7 +100,7 @@
         <item>
          <widget class="QLabel" name="setD">
           <property name="text">
-           <string>set d</string>
+           <string>d</string>
           </property>
          </widget>
         </item>
@@ -106,7 +110,7 @@
         <item>
          <widget class="QPushButton" name="parameters">
           <property name="text">
-           <string>Send</string>
+           <string>Process</string>
           </property>
          </widget>
         </item>
@@ -122,7 +126,7 @@
      <x>0</x>
      <y>0</y>
      <width>750</width>
-     <height>21</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -130,7 +134,6 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen"/>
-    <addaction name="actionSave"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
@@ -138,19 +141,15 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
+   </property>
    <property name="text">
     <string>Open</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>Save</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionClose">
@@ -159,6 +158,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="res/res.qrc"/>
+ </resources>
  <connections/>
 </ui>

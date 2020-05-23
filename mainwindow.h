@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLabel>
 #include "include/Eigen/Core"
 
 QT_BEGIN_NAMESPACE
@@ -20,13 +21,16 @@ private slots:
     void on_parameters_clicked();
     void openBMP();
     Eigen::MatrixXi pixmapToMatrix(const QPixmap* p);
-    QImage matrixToPixmap(Eigen::MatrixXi m);
+    QPixmap matrixToPixmap(Eigen::MatrixXi m);
 
     void on_actionClose_triggered();
 
     void on_actionOpen_triggered();
 
+    void on_actionSave_triggered();
+
 private:
     Ui::MainWindow *ui;
+    QLabel *statusLabel;
 };
 #endif // MAINWINDOW_H
