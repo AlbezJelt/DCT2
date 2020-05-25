@@ -19,6 +19,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->writeF->setValidator(new QIntValidator(0,INT_MAX,this));
+    ui->writeD->setValidator(new QIntValidator(0,INT_MAX,this));
+
     //Setup image area 1
     ui->scrollArea->takeWidget();
     ui->scrollArea->setWidget(ui->img);
@@ -35,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     statusLabel = new QLabel(this);
     statusLabel->setText("Ready...");
-    ui->statusbar->addPermanentWidget(statusLabel, 1);
+    ui->statusbar->addWidget(statusLabel, 1);
 }
 
 MainWindow::~MainWindow()
@@ -74,21 +77,27 @@ void MainWindow::on_parameters_clicked()
         msgBox.exec();
         return;
     }
-    ui->writeF->setValidator(new QIntValidator());
     int F = ui->writeF->text().toInt();
-    ui->writeD->setValidator(new QIntValidator());
-    int d = ui->writeD->text().toInt();
-    if (d > 0 && d < (2*F - 2) ){
+    if (F <= 0){
         QMessageBox msgBox;
-        msgBox.setText("d is not correct. It must be d = (2f - 2)");
+        msgBox.setText("F is not correct. It must be F > 0");
+        msgBox.exec();
+        return;
+    }
+    int d = ui->writeD->text().toInt();
+    if (!(d > 0 && d < (2*F - 2))){
+        QMessageBox msgBox;
+        msgBox.setText("d is not correct. It must be d < (2f - 2)");
         msgBox.exec();
         return;
     }
     Eigen::MatrixXi in = pixmapToMatrix(p);
     try {
+        ui->statusbar->showMessage(tr("Processing..."));
         Eigen::MatrixXi out = Compress::DCTCompress(in, F, d);
         QPixmap result = matrixToPixmap(out);
         ui->img_2->setPixmap(result);
+        ui->statusbar->showMessage(tr("Done!"));
     } catch (const std::exception &e) {
         QMessageBox msgBox;
         msgBox.setText(e.what());
