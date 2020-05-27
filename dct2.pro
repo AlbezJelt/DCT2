@@ -16,21 +16,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Compress.cpp \
-    DCT2.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    test.cpp
+    src/Compress.cpp \
+    src/DCT2.cpp \
+    src/DCTFast/DCT2Fast.cpp \
+    src/DCTFast/FastDctFft.cpp \
+    src/DCTFast/FastDctLee.cpp \
+    src/DCTFast/FftRealPair.cpp \
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/test.cpp
 
 HEADERS += \
-    Compress.h \
-    DCT2.h \
+    include/Compress.h \
+    include/DCT2.h \
+    include/DCTFast/DCT2Fast.h \
+    include/DCTFast/FastDctFft.h \
+    include/DCTFast/FastDctLee.h \
+    include/DCTFast/FftRealPair.h \
     include/Eigen/Core \
-    mainwindow.h \
-    test.h
+    include/mainwindow.h \
+    include/test.h
 
 FORMS += \
-    mainwindow.ui
+    form/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

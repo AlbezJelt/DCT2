@@ -1,5 +1,5 @@
 #include "include/Eigen/Core"
-#include "DCT2.h"
+#include "include/DCT2.h"
 
 #include <iostream>
 #include <cmath>

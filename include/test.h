@@ -4,7 +4,7 @@
 namespace test
 {
     void test_project_matrix();
-    void prova();
+    void compare_DCT2_algorithms();
 }
 
 #endif // TEST_H

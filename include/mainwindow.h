@@ -27,7 +27,6 @@ private slots:
 
     void on_actionOpen_triggered();
 
-
 private:
     Ui::MainWindow *ui;
     QLabel *statusLabel;

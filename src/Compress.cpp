@@ -1,6 +1,6 @@
 #include "include/Eigen/Core"
-#include "Compress.h"
-#include "DCT2.h"
+#include "include/Compress.h"
+#include "include/DCT2.h"
 
 #include <iostream>
 #include <vector>

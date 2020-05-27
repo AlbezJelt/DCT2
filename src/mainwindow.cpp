@@ -1,8 +1,8 @@
-#include "mainwindow.h"
+#include "include/mainwindow.h"
 #include "ui_mainwindow.h"
 #include "include/Eigen/Core"
-#include "Compress.h"
-#include "DCT2.h"
+#include "include/Compress.h"
+#include "include/DCT2.h"
 #include <QFileDialog>
 #include <QImage>
 #include <QPixmap>
@@ -77,7 +77,7 @@ void MainWindow::on_parameters_clicked()
         msgBox.exec();
         return;
     }
-    int F = ui->writeF->text().toInt();
+        int F = ui->writeF->text().toInt();
     if (F <= 0){
         QMessageBox msgBox;
         msgBox.setText("F is not correct. It must be F > 0");
