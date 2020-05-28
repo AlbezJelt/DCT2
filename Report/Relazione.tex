@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,12pt]{report}
 \usepackage[hidelinks]{hyperref}
 \usepackage{float}
 \usepackage{graphicx}
@@ -10,22 +10,6 @@
 \usepackage{setspace}
 \usepackage{parskip}
 \usepackage{amsmath}
-
-
-\makeatletter
-\patchcmd\l@section{%
-  \nobreak\hfil\nobreak
-}{%
-  \nobreak
-  \leaders\hbox{%
-    $\m@th \mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$%
-  }%
-  \hfill
-  \nobreak
-}{}{\errmessage{\noexpand\l@section could not be patched}}
-\makeatother
-
-\setcounter{secnumdepth}{0}
 
 % un po' di estetica...
 \usepackage{fancyhdr}
@@ -53,6 +37,13 @@
 
 \frenchspacing
 
+\newcommand{\mychapter}[2]{
+    \setcounter{chapter}{#1}
+    \setcounter{section}{0}
+    \chapter*{#2}
+    \addcontentsline{toc}{chapter}{#2}
+}
+
 \begin{document}
 
 \begin{titlepage}
@@ -60,7 +51,7 @@
     \vspace*{5mm}
 	\begin{minipage}[t]{0.15\textwidth}
 	    \vspace*{5mm}
-		\vspace{-3.5mm}{\includegraphics[scale=1.8]{img/logo_bicocca.png}}
+		\vspace{-3.5mm}{\includegraphics[scale=1.8]{../img/logo_bicocca.png}}
 	\end{minipage}
 	\hspace{1cm}
 	\begin{minipage}[t]{0.9\textwidth}
@@ -107,17 +98,45 @@
 
 \end{titlepage}
 
+\tableofcontents
+
+\mychapter{0}{Introduzione}
+In questa relazione vengono presentate e discusse le modalita di implementazione della DCT (dall'inglese Discrete Cosine Transform), ovvero la più diffusa funzione che provvede alla compressione spaziale.\\
+Nella prima parte viene confrontata la versione "Nativa" della DCT con alcune varianti conosciute, studiandone il costo computazionale.\\
+Nella seconda parte viene documentato un semplice tool per applicare su immagini in toni di grigio, tramite un approccio di compressione tipo jpeg (senza utilizzare una matrice di quantizzazione), la funzione DCT2 implemetata.
+
+\mychapter{1}{Analisi DCT}
+
+\section{Discrete Cosine Transform}
+Una DCT esprime una sequenza finita di punti in termini di una somma di funzioni coseno oscillanti a diverse frequenze. Ad oggi è una delle tecniche di trasformazione piu utlizzate nella Teoria dei segnali e nella compressione dei dati, in particolare nei media digitali (audio, video, radio ecc..).\\
+In queste applicazioni infatti la maggior parte delle informazioni significative tendono ad essere concentrate in poche componenti a bassa frequenza della DCT. Questo permette di comprimere a piacere il dato scartando le componenti ad alta frequenza (compressione lossy).
+
+\section{DCT-II e DCT-III}
+La DCT-II è probabilmente la forma più utilizzata, infatti viene indicata come "la DCT".\\
+\[X_k = \sum_{n=0}^{N-1} x_n \cos \left[\frac{\pi}{N} \left(n+\frac{1}{2}\right) k \right] \quad \quad k = 0, \dots, N-1.\]\\\\
+La sua inversa è la DCT-III e per questo viene indicata come "l'inversa della DCT" o "IDCT".\\
+\[X_k = \frac{1}{2} x_0 + \sum_{n=1}^{N-1} x_n \cos \left[\frac{\pi}{N} n \left(k+\frac{1}{2}\right) \right] \quad \quad k = 0, \dots, N-1.\]\\\\
+Entrambe le funzioni effettuano N somme per calcolare la k-esima componente di un vettore di N componenti, determinando un costo computazionale \( O(N^2)\).
+
+\subsection*{Implementazione}
+
+\section{DCT tipo I - IV}
+
+\section{DCT di Lee}
+
 \section{Confronto}
 %Creazione codice e descrizione libreria
 %commento confronto
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.77\linewidth]{img/comparison.png}
+\includegraphics[width=0.77\linewidth]{../img/comparison.png}
 %\caption{\textit{}}
 \label{fig:2}
 \end{figure}
 
-\section{Codice}
+\mychapter{2}{Test con immagini}
 
-\section{Prove con immagini}
+\section{Tool di testing}
+
+\section{Risultati}
 \end{document}
