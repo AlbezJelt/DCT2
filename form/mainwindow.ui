@@ -14,7 +14,7 @@
    <string>BMP Processing</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="res/res.qrc">
+   <iconset resource="../res/res.qrc">
     <normaloff>:/icons/bmp</normaloff>:/icons/bmp</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -34,7 +34,7 @@
              <x>0</x>
              <y>0</y>
              <width>359</width>
-             <height>384</height>
+             <height>404</height>
             </rect>
            </property>
            <widget class="QLabel" name="img">
@@ -64,7 +64,7 @@
              <x>0</x>
              <y>0</y>
              <width>359</width>
-             <height>384</height>
+             <height>404</height>
             </rect>
            </property>
            <widget class="QLabel" name="img_2">
@@ -112,6 +112,9 @@
           <property name="text">
            <string>Process</string>
           </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -126,7 +129,7 @@
      <x>0</x>
      <y>0</y>
      <width>750</width>
-     <height>27</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -142,7 +145,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="res/res.qrc">
+    <iconset resource="../res/res.qrc">
      <normaloff>:/icons/open</normaloff>:/icons/open</iconset>
    </property>
    <property name="text">
@@ -159,7 +162,7 @@
   </action>
  </widget>
  <resources>
-  <include location="res/res.qrc"/>
+  <include location="../res/res.qrc"/>
  </resources>
  <connections/>
 </ui>

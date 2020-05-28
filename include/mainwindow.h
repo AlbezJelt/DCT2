@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include "include/Eigen/Core"
+#include <iostream>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,5 +31,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QLabel *statusLabel;
+    std::string strMsg;
 };
 #endif // MAINWINDOW_H

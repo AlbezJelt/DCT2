@@ -57,7 +57,7 @@ void MainWindow::openBMP()
         QPixmap pixmap = QPixmap::fromImage(img);
         ui->img->setPixmap(QPixmap(pixmap));
 
-        std::string strMsg = QFileInfo(fname).fileName().toStdString() + '\t' + std::to_string(pixmap.width()) + 'x' + std::to_string(pixmap.height());
+        strMsg = QFileInfo(fname).fileName().toStdString() + '\t' + std::to_string(pixmap.width()) + 'x' + std::to_string(pixmap.height());
         statusLabel->setText(tr(strMsg.c_str()));
 
     } catch (const std::exception &e) {
@@ -69,12 +69,19 @@ void MainWindow::openBMP()
 
 void MainWindow::on_parameters_clicked()
 {
+    statusLabel->setText("Processing...");
+    statusLabel->repaint();
 
     const QPixmap* p = ui->img->pixmap();
+
+    ui->img_2->clear();
+    ui->img_2->repaint();
+
     if (!p){
         QMessageBox msgBox;
         msgBox.setText("Load an image first!");
         msgBox.exec();
+        statusLabel->setText(tr(strMsg.c_str()));
         return;
     }
         int F = ui->writeF->text().toInt();
@@ -82,6 +89,7 @@ void MainWindow::on_parameters_clicked()
         QMessageBox msgBox;
         msgBox.setText("F is not correct. It must be F > 0");
         msgBox.exec();
+        statusLabel->setText(tr(strMsg.c_str()));
         return;
     }
     int d = ui->writeD->text().toInt();
@@ -89,19 +97,20 @@ void MainWindow::on_parameters_clicked()
         QMessageBox msgBox;
         msgBox.setText("d is not correct. It must be d < (2f - 2)");
         msgBox.exec();
+        statusLabel->setText(tr(strMsg.c_str()));
         return;
     }
     Eigen::MatrixXi in = pixmapToMatrix(p);
     try {
-        ui->statusbar->showMessage(tr("Processing..."));
         Eigen::MatrixXi out = Compress::DCTCompress(in, F, d);
         QPixmap result = matrixToPixmap(out);
         ui->img_2->setPixmap(result);
-        ui->statusbar->showMessage(tr("Done!"));
+        statusLabel->setText(tr("Done!"));
     } catch (const std::exception &e) {
         QMessageBox msgBox;
         msgBox.setText(e.what());
         msgBox.exec();
+        statusLabel->setText(tr(strMsg.c_str()));
     }
 }
 
