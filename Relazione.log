@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7440 64-bit) (preloaded format=pdflatex 2020.5.23)  28 MAY 2020 11:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7440 64-bit) (preloaded format=pdflatex 2020.5.23)  28 MAY 2020 12:06
 entering extended mode
 **./Relazione.tex
 (Relazione.tex
@@ -356,7 +356,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
 )
 \c@lstlisting=\count281
-<img/logo_bicocca.png, id=3, 48.55641pt x 49.68562pt>
+<img/logo_bicocca.png, id=15, 48.55641pt x 49.68562pt>
 File: img/logo_bicocca.png Graphic file (type png)
 <use img/logo_bicocca.png>
 Package pdftex.def Info: img/logo_bicocca.png  used on input line 63.
@@ -380,29 +380,40 @@ Overfull \hbox (58.92885pt too wide) in paragraph at lines 59--77
 
 {C:/Users/King/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./img/logo_b
 icocca.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 109.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 109.
+<img/comparison.png, id=24, 215.30438pt x 141.90515pt>
+File: img/comparison.png Graphic file (type png)
+<use img/comparison.png>
+Package pdftex.def Info: img/comparison.png  used on input line 115.
+(pdftex.def)             Requested size: 348.7872pt x 229.90456pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 122.
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.122 \end{document}
+                     [1 <./img/comparison.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 122.
  (Relazione.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 109.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 109.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 122.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 122.
 Package rerunfilecheck Info: File `Relazione.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 109.
+(rerunfilecheck)             Checksum: 8E7C1E662762EB56208D4AB07C81D830;141.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 122.
  ) 
 Here is how much of TeX's memory you used:
- 7685 strings out of 480799
- 113190 string characters out of 2905531
- 380939 words of memory out of 3000000
- 23573 multiletter control sequences out of 15000+200000
- 534455 words of font info for 31 fonts, out of 3000000 for 9000
+ 7702 strings out of 480799
+ 113433 string characters out of 2905531
+ 381003 words of memory out of 3000000
+ 23586 multiletter control sequences out of 15000+200000
+ 535061 words of font info for 33 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 34i,7n,45p,913b,346s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 34i,10n,45p,913b,346s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program F
 iles/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb>
-Output written on Relazione.pdf (1 page, 50367 bytes).
+Output written on Relazione.pdf (2 pages, 64249 bytes).
 PDF statistics:
- 24 PDF objects out of 1000 (max. 8388607)
- 2 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 PDF objects out of 1000 (max. 8388607)
+ 5 named destinations out of 1000 (max. 500000)
+ 35 words of extra memory for PDF output out of 10000 (max. 10000000)
 
