@@ -1,4 +1,6 @@
 \documentclass[a4paper,12pt]{report}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{reference.bib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{float}
 \usepackage{graphicx}
@@ -7,6 +9,7 @@
 \usepackage{etoolbox}
 \usepackage{fullpage}
 \renewcommand*\contentsname{Indice}
+\renewcommand{\lstlistingname}{Listato}
 \usepackage{setspace}
 \usepackage{parskip}
 \usepackage{amsmath}
@@ -25,7 +28,8 @@
 	numbers=left,
 	tabsize=2,
 	basicstyle=\scriptsize,
-	showstringspaces=false
+	showstringspaces=false,
+	language=C++
 }
 
 \setlength{\parindent}{2em}
@@ -111,21 +115,143 @@ Nella seconda parte viene documentato un semplice tool per applicare su immagini
 Una DCT esprime una sequenza finita di punti in termini di una somma di funzioni coseno oscillanti a diverse frequenze. Ad oggi è una delle tecniche di trasformazione piu utlizzate nella Teoria dei segnali e nella compressione dei dati, in particolare nei media digitali (audio, video, radio ecc..).\\
 In queste applicazioni infatti la maggior parte delle informazioni significative tendono ad essere concentrate in poche componenti a bassa frequenza della DCT. Questo permette di comprimere a piacere il dato scartando le componenti ad alta frequenza (compressione lossy).
 
-\section{DCT-II e DCT-III}
+\section{DCT e IDCT}
 La DCT-II è probabilmente la forma più utilizzata, infatti viene indicata come "la DCT".\\
-\[X_k = \sum_{n=0}^{N-1} x_n \cos \left[\frac{\pi}{N} \left(n+\frac{1}{2}\right) k \right] \quad \quad k = 0, \dots, N-1.\]\\\\
+\[C_k = \alpha_k \sum_{i=0}^{N-1} V_i\cos \left[\frac{\pi \left(2i + 1\right) k }{2N}\right] \quad i = 0, \dots, N-1 \quad e \quad \alpha_k = \begin{cases} 1/\sqrt{N}, & \mbox{se } k\mbox{ = 0} \\ \sqrt{2/N}, & \mbox{se } \mbox{\(1 \leq k \leq N - 1\)} \end{cases}\]\\\\
 La sua inversa è la DCT-III e per questo viene indicata come "l'inversa della DCT" o "IDCT".\\
-\[X_k = \frac{1}{2} x_0 + \sum_{n=1}^{N-1} x_n \cos \left[\frac{\pi}{N} n \left(k+\frac{1}{2}\right) \right] \quad \quad k = 0, \dots, N-1.\]\\\\
+\[V_i = \sum_{k=0}^{N-1} \alpha_k C_k \cos \left[\frac{\pi \left(2i + 1\right) k }{2N}\right] \quad k = 0, \dots, N-1 \quad e \quad \alpha_k = \begin{cases} 1/\sqrt{N}, & \mbox{se } k\mbox{ = 0} \\ \sqrt{2/N}, & \mbox{se } \mbox{\(1 \leq k \leq N - 1\)} \end{cases}\]\\\\
+
 Entrambe le funzioni effettuano N somme per calcolare la k-esima componente di un vettore di N componenti, determinando un costo computazionale \( O(N^2)\).
 
 \subsection*{Implementazione}
+Per l'implementazione è stato utilizzato C++, sfruttando la libreria open-source Eigen (\url{https://eigen.tuxfamily.org/}) per semplificare la gestione dei dati.\\
+\begin{lstlisting}[caption={Funzione di calcolo DCT},captionpos=b]
+	void DCT2::DCT(Eigen::VectorXd &_v)
+	{
+	
+		const Eigen::VectorXd _v_copy = _v;
+		const int N = _v.size();
+		double ak = 1.0 / sqrt(N);
+		double ck = 0;
+	
+		for (int k = 0; k < N; k++)
+		{
+			ck = 0;
+			for (int i = 0; i < N; i++)
+			{
+				ck += cos((2.0 * i + 1.0) * k * M_PI / (2.0 * N)) * _v_copy(i);
+			}
+			_v(k) = ak * ck;
+			if (k == 0)
+			{
+				ak = sqrt(2.0) / sqrt(N);
+			}
+		}
+	}
+\end{lstlisting}
+\hfill \break
+\begin{lstlisting}[caption={Funzione di calcolo IDCT},captionpos=b]
+void DCT2::IDCT(Eigen::VectorXd &_c)
+{
+    const Eigen::VectorXd _c_copy = _c;
+    const int N = _c.size();
+    double ak = 0;
+    double vi = 0;
 
-\section{DCT tipo I - IV}
+    for (int i = 0; i < N; i++)
+    {
+        vi = 0;
+        ak = 1.0 / sqrt(N);
+        for (int k = 0; k < N; k++)
+        {
+            vi += cos((2.0 * i + 1.0) * k * M_PI / (2.0 * N)) * _c_copy(k) * ak;
+            if (k == 0)
+            {
+                ak = sqrt(2.0) / sqrt(N);
+            }
+        }
+        _c(i) = vi;
+    }
+}
+\end{lstlisting}
 
-\section{DCT di Lee}
+\section{DCT2 e IDCT2}
+La DCT2 è una trasformazione a due dimensioni, ottenuta semplicemente applicando la DCT mono-dimensionale ad una dimensione, seguita da un'altra applicazione all'altra dimensione.\\
+La definizione della DCT bi-dimensionale per una matrice A \textit{m x n} in input è:\\
+\begin{align*}
+C_{kl} = \alpha_k \alpha_l \sum_{i=0}^{m-1} \sum_{j=0}^{n-1}&A_{ij} \cos \left[\frac{\pi \left(2i + 1\right) k }{2m}\right] \cos \left[\frac{\pi \left(2j + 1\right) l }{2n}\right],\\
+&con \quad 0 \leq k \leq m - 1, \quad 0 \leq l \leq n - 1,\\
+&\alpha_k = \begin{cases} 1/\sqrt{m}, & \mbox{se } i\mbox{ = 0} \\ \sqrt{2/m}, & \mbox{se } \mbox{\(1 \leq i \leq m - 1\)} \end{cases} \quad e \quad \alpha_l = \begin{cases} 1/\sqrt{n}, & \mbox{se } j\mbox{ = 0} \\ \sqrt{2/n}, & \mbox{se } \mbox{\(1 \leq j \leq n - 1\)} \end{cases}
+\end{align*}
+L'inversa di tale trasformazione è la IDCT2, ottenuta applicando IDCT alle due dimensioni.
+
+\subsection*{Implementazione}
+Anche in questo caso Eigen è utilizzato per mantenere la struttura dati tramite un oggetto \textit{Eigen::MatrixXd}. L'implementazione non sfrutta direttamente la definizione ma computa la DCT2/IDCT2 prima sulle righe e poi sulle colonne della matrice in input. Inoltre essendo l'elaborazione di ogni vettore indipendente dagli altri è possibile parallelizzarne la computazione.\\
+\begin{lstlisting}[caption={Funzione di calcolo DCT2},captionpos=b]
+	Eigen::MatrixXd DCT2::DCT2_mt(Eigen::MatrixXd &_m)
+	{
+		Eigen::MatrixXd out = _m;
+	
+	// DCT su righe
+	#pragma omp parallel for
+		for (int i = 0; i < out.rows(); i++)
+		{
+			Eigen::VectorXd row = out.row(i);
+			DCT(row);
+			out.row(i) = row;
+		}
+	
+	// DCT su colonne
+	#pragma omp parallel for
+		for (int i = 0; i < out.cols(); i++)
+		{
+			Eigen::VectorXd col = out.col(i);
+			DCT(col);
+			out.col(i) = col;
+		}
+	
+		return out;
+	}
+\end{lstlisting}
+\newpage
+\begin{lstlisting}[caption={Funzione di calcolo IDCT2},captionpos=b]
+	Eigen::MatrixXd DCT2::IDCT2_mt(Eigen::MatrixXd &_m)
+	{
+		Eigen::MatrixXd out = _m;
+	
+	// IDCT su righe
+	#pragma omp parallel for
+		for (int i = 0; i < out.rows(); i++)
+		{
+			Eigen::VectorXd row = out.row(i);
+			IDCT(row);
+			out.row(i) = row;
+		}
+	
+	// IDCT su colonne
+	#pragma omp parallel for
+		for (int i = 0; i < out.cols(); i++)
+		{
+			Eigen::VectorXd col = out.col(i);
+			IDCT(col);
+			out.col(i) = col;
+		}
+	
+		return out;
+	}
+\end{lstlisting}
+
+\section{Varianti DCT}
+Esistono diverse varianti della DCT che riducono la complessita a \(O(NlogN)\). Tali metodi sono conosciuti come \textit{fast DCT} o \textit{FCT} in quanto appunto migliorano notevolmente il costo computazionale.\\Di seguito vengono citate due delle più comuni.
+
+\subsubsection*{Fast DCT di Lee}
+Descritta da Byeong Gi Lee \cite{Lee} nel 1984 è uno degli algoritmi fast DCT per \(2^m\) punti più comune. Utilizza una struttura ricorsiva dove la trasformazione DCT è decomposta in una parte pari e una dispari. Queste parti sono a loro volta decomposte nello stesso modo finchè non sono abbastanza piccole (N=2) da essere calcolate tramite valutazione diretta \cite{LAGERSTRM2001DesignAI}.
+
+\subsubsection*{Fast DCT FFT}
+Invece di applicare direttamente la formula DCT (o scomporla come mostrato da Lee) è possibile fattorizzare la computazione in modo simile alla \textit{fast Fourier transform} (FFT). Gli algoritmi basati su sull'algoritmo di Cooley-Tukey \cite{10.2307/2003354} sono i piu comuni, ma qualunque altro algoritmo FFT è applicabile. 
 
 \section{Confronto}
-%Creazione codice e descrizione libreria
+
 %commento confronto
 \begin{figure}[H]
 \centering
@@ -139,4 +265,7 @@ Entrambe le funzioni effettuano N somme per calcolare la k-esima componente di u
 \section{Tool di testing}
 
 \section{Risultati}
+
+\printbibliography
+
 \end{document}
