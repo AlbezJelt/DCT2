@@ -102,7 +102,7 @@ void MainWindow::on_parameters_clicked()
     }
     Eigen::MatrixXi in = pixmapToMatrix(p);
     try {
-        Eigen::MatrixXi out = Compress::DCTCompress(in, F, d);
+        Eigen::MatrixXi out = Compress::DCTCompress(in, F, d, DCTFunct);
         QPixmap result = matrixToPixmap(out);
         ui->img_2->setPixmap(result);
         statusLabel->setText(tr("Done!"));
@@ -151,4 +151,24 @@ QPixmap MainWindow::matrixToPixmap(Eigen::MatrixXi m){
     }
 
     return QPixmap::fromImage(tmp);
+}
+
+
+
+void MainWindow::on_rb_Fast_toggled(bool checked)
+{
+    if (checked)
+        DCTFunct = Compress::Fast_Fft;
+}
+
+void MainWindow::on_rb_Lee_toggled(bool checked)
+{
+    if (checked)
+        DCTFunct = Compress::Fast_Lee;
+}
+
+void MainWindow::on_rb_Naive_toggled(bool checked)
+{
+    if (checked)
+        DCTFunct = Compress::Naive_custom;
 }

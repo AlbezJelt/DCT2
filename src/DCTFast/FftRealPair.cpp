@@ -116,7 +116,8 @@ void Fft::transformBluestein(Eigen::VectorXd &real, Eigen::VectorXd &imag) {
 	}
 	
 	// Trignometric tables
-    Eigen::VectorXd cosTable(n), sinTable(n);
+    Eigen::VectorXd cosTable = Eigen::VectorXd::Zero(n);
+    Eigen::VectorXd sinTable = Eigen::VectorXd::Zero(n);
 	for (size_t i = 0; i < n; i++) {
 		uintmax_t temp = static_cast<uintmax_t>(i) * i;
 		temp %= static_cast<uintmax_t>(n) * 2;
@@ -126,12 +127,15 @@ void Fft::transformBluestein(Eigen::VectorXd &real, Eigen::VectorXd &imag) {
 	}
 	
 	// Temporary vectors and preprocessing
-    Eigen::VectorXd areal(m), aimag(m);
+    Eigen::VectorXd areal = Eigen::VectorXd::Zero(m);
+    Eigen::VectorXd aimag = Eigen::VectorXd::Zero(m);
 	for (size_t i = 0; i < n; i++) {
         areal(i) =  real(i) * cosTable(i) + imag(i) * sinTable(i);
         aimag(i) = -real(i) * sinTable(i) + imag(i) * cosTable(i);
 	}
-    Eigen::VectorXd breal(m), bimag(m);
+
+    Eigen::VectorXd breal = Eigen::VectorXd::Zero(m);
+    Eigen::VectorXd bimag = Eigen::VectorXd::Zero(m);
     breal(0) = cosTable(0);
     bimag(0) = sinTable(0);
 	for (size_t i = 1; i < n; i++) {
@@ -139,8 +143,9 @@ void Fft::transformBluestein(Eigen::VectorXd &real, Eigen::VectorXd &imag) {
         bimag(i) = bimag(m - i) = sinTable(i);
 	}
 	
-	// Convolution
-    Eigen::VectorXd creal(m), cimag(m);
+    // Convolution
+    Eigen::VectorXd creal = Eigen::VectorXd::Zero(m);
+    Eigen::VectorXd cimag = Eigen::VectorXd::Zero(m);
 	convolve(areal, aimag, breal, bimag, creal, cimag);
 	
 	// Postprocessing
@@ -155,7 +160,7 @@ void Fft::convolve(const Eigen::VectorXd &xvec, const Eigen::VectorXd &yvec, Eig
 	size_t n = xvec.size();
 	if (n != yvec.size() || n != outvec.size())
 		throw std::invalid_argument("Mismatched lengths");
-    Eigen::VectorXd outimag(n);
+    Eigen::VectorXd outimag = Eigen::VectorXd::Zero(n);
     convolve(xvec, Eigen::VectorXd(n), yvec, Eigen::VectorXd(n), outvec, outimag);
 }
 

@@ -5,6 +5,7 @@
 #include <QLabel>
 #include "include/Eigen/Core"
 #include <iostream>
+#include "include/Compress.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,9 +29,17 @@ private slots:
 
     void on_actionOpen_triggered();
 
+    void on_rb_Fast_toggled(bool checked);
+
+    void on_rb_Lee_toggled(bool checked);
+
+    void on_rb_Naive_toggled(bool checked);
+
 private:
     Ui::MainWindow *ui;
     QLabel *statusLabel;
     std::string strMsg;
+    Compress::DCTFunction DCTFunct = Compress::Fast_Fft;
+
 };
 #endif // MAINWINDOW_H

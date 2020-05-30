@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
-    <height>500</height>
+    <width>840</width>
+    <height>542</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,8 +33,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>359</width>
-             <height>404</height>
+             <width>404</width>
+             <height>424</height>
             </rect>
            </property>
            <widget class="QLabel" name="img">
@@ -63,8 +63,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>359</width>
-             <height>404</height>
+             <width>404</width>
+             <height>424</height>
             </rect>
            </property>
            <widget class="QLabel" name="img_2">
@@ -85,8 +85,12 @@
         </item>
        </layout>
       </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
          <widget class="QLabel" name="setF">
           <property name="text">
@@ -106,6 +110,41 @@
         </item>
         <item>
          <widget class="QLineEdit" name="writeD"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>DCT type:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rb_Fast">
+            <property name="text">
+             <string>Fast</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rb_Lee">
+            <property name="text">
+             <string>Lee fast</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rb_Naive">
+            <property name="text">
+             <string>Naive custom</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QPushButton" name="parameters">
@@ -128,8 +167,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>750</width>
-     <height>21</height>
+     <width>840</width>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

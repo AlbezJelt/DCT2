@@ -44,8 +44,8 @@ void FastDctFft::transform(Eigen::VectorXd &vec) {
 	Fft::transform(real, vec);
 	for (size_t i = 0; i < len; i++) {
 		double temp = i * M_PI / (len * 2);
-        vec(i) = real(i) * std::cos(temp) + vec(i) * std::sin(temp);
-	}
+        vec(i) = (real(i) * std::cos(temp) + vec(i) * std::sin(temp)) / (len / 2.0);
+    }
 }
 
 

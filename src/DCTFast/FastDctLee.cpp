@@ -59,11 +59,11 @@ static void forwardTransform(double vec[], double temp[], size_t len) {
 	forwardTransform(temp, vec, halfLen);
 	forwardTransform(&temp[halfLen], vec, halfLen);
 	for (size_t i = 0; i < halfLen - 1; i++) {
-		vec[i * 2 + 0] = temp[i];
-		vec[i * 2 + 1] = temp[i + halfLen] + temp[i + halfLen + 1];
+        vec[i * 2 + 0] = temp[i];
+        vec[i * 2 + 1] = temp[i + halfLen] + temp[i + halfLen + 1];
 	}
-	vec[len - 2] = temp[halfLen - 1];
-	vec[len - 1] = temp[len - 1];
+    vec[len - 2] = temp[halfLen - 1];
+    vec[len - 1] = temp[len - 1];
 }
 
 
@@ -71,6 +71,9 @@ static void forwardTransform(double vec[], double temp[], size_t len) {
 // See: https://www.nayuki.io/res/fast-discrete-cosine-transform-algorithms/lee-new-algo-discrete-cosine-transform.pdf
 void FastDctLee::inverseTransform(Eigen::VectorXd &vec) {
 	inverseTransform(vec.data(), vec.size());
+    size_t len = vec.size();
+    for(size_t i = 0; i<len; i++)
+        vec(i) /= (len / 2.0);
 }
 
 
@@ -98,7 +101,7 @@ static void inverseTransform(double vec[], double temp[], size_t len) {
 	for (size_t i = 0; i < halfLen; i++) {
 		double x = temp[i];
 		double y = temp[i + halfLen] / (std::cos((i + 0.5) * M_PI / len) * 2);
-		vec[i] = x + y;
-		vec[len - 1 - i] = x - y;
-	}
+        vec[i] = x + y;
+        vec[len - 1 - i] = x - y;
+    }
 }
