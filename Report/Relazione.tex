@@ -276,7 +276,7 @@ Inoltre, viene utilizzata la libreria DCTFast nella quale ricaviamo la DCT2 oper
 \section{Tool di testing}
 Una volta avviato il programma, è possibile caricare l'immagine .bmp tramite un apposito tasto ed inserire i valori di f e d. Una volta inseriti i parametri, tramite il pulsante process viene chiamato il metodo on\_parameters\_clicked(), che dopo aver controllato che f e d rispettino tutti i vincoli trasmorma l'immagine (tramite la funzione pixmapToMatrix()) in una matrice e la invia alla funzione DCTcompress. Questa funzione divide l'immagine in blocchi, applica la DCT2 e poi restituisce una matrice che viene passata alla funzione matrixToPixmap() per poter essere visualizzata in output nell'iterfaccia grafica.\\
 La funzione compress prende in input una matrice di interi e i parametri f e d restituendo in output una matrice di interi. Al suo interno, la matrice di input viene trasformata nel formato double e viene eseguito un troncamento per poter scartare gli "avanzi". Iterativamente, per ogn i blocco quadrato f x f applichiamo la dct2 e poi ritorniamo la matrice nel formato int (arrottondando o suoi valori double all'intero più vicino, mettendo a zero i valori negativi e a 255 quelli maggiori di 255). 
-
+\newpage
 \section{Risultati}
 Il programma è stato testato sulle immagini di prova fornite e sono stati sperimentati diversi valori dei parametri \textit{F} e \textit{d}. \\
 
@@ -284,7 +284,7 @@ Il programma è stato testato sulle immagini di prova fornite e sono stati speri
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{../img/bridge_200_100.png}
+\includegraphics[width=0.6\linewidth]{../img/bridge_200_100.png}
 \caption{\textit{bridge.bmp con F = 200 e d = 100}}
 \end{figure}
 
@@ -292,7 +292,7 @@ Il programma è stato testato sulle immagini di prova fornite e sono stati speri
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{../img/bridge_200_7.png}
+\includegraphics[width=0.6\linewidth]{../img/bridge_200_7.png}
 \caption{\textit{bridge.bmp con F = 200 e d = 7}}
 \end{figure}
 
@@ -320,7 +320,7 @@ Ponendo \textit{F} = 20 e \textit{d} = 15 otteniamo un'immagine che non sembra d
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{../img/cathedral_20_15.png}
+\includegraphics[width=0.6\linewidth]{../img/cathedral_20_15.png}
 \caption{\textit{cathedral.bmp con F = 20 e d = 15}}
 \end{figure}
 
@@ -328,7 +328,7 @@ Abbiamo successivamente impostato \textit{F} = 10 ed abbiamo assegnato a \textit
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{../img/cathedral_10_17.png}
+\includegraphics[width=0.6\linewidth]{../img/cathedral_10_17.png}
 \caption{\textit{cathedral.bmp con F = 10 e d = 17}}
 \end{figure}
 
