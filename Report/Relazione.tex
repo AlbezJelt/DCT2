@@ -252,14 +252,14 @@ Descritta da Byeong Gi Lee \cite{Lee} nel 1984 è uno degli algoritmi fast DCT p
 Invece di applicare direttamente la formula DCT (o scomporla come mostrato da Lee) è possibile fattorizzare la computazione in modo simile alla \textit{fast Fourier transform} (FFT). Gli algoritmi basati su sull'algoritmo di Cooley-Tukey \cite{10.2307/2003354} sono i piu comuni, ma qualunque altro algoritmo FFT è applicabile. 
 
 \section{Confronto}
-
-%commento confronto
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.77\linewidth]{../img/comparison.png}
-%\caption{\textit{}}
-\label{fig:2}
+\caption{\textit{Confronto DCT2 custom, Fast DCT di Lee e Fast DCT FFT}}
+%\label{fig:2}
 \end{figure}
+Per poter rappresentare graficamente il confronto fra l'algoritmo di DCT2 da noi implementato (\textit{Custom}), l'algoritmo fast della libreria Lee (\textit{Lee}) e l'algoritmo che sfrutta la fast Fourier transform (\textit{Fast}) è stato utilizzato un grafico a linee con indicatori, ponendo sull'asse delle ascisse la dimensione della matrice (sono state utilizzate dimensioni in potenza di 2 per poter eseguire il codice di Lee) e sulle ordinate il tempo impiegato, espresso in scala logaritmica. \\
+Si può notare chiaramente che la crescita del tempo impiegato dall'algoritmo Custom è esponenziale rispetto all'andamento similare che hanno gli algoritmi Fast e Lee. %è giusto dire esponenziale? o meglio controllare se effettivamente è O n^3?
 
 \mychapter{2}{Test con immagini}
 Il programma è stato scritto tramite QT, una libreria multipiattaforma per lo sviluppo di programmi che utilizzano un'interfaccia grafica (attraverso l'uso di widget) che utlizza il linguaggio C++ (motivo per il quale abbiamo deciso di utilizzarlo).\\
@@ -278,7 +278,59 @@ Una volta avviato il programma, è possibile caricare l'immagine .bmp tramite un
 La funzione compress prende in input una matrice di interi e i parametri f e d restituendo in output una matrice di interi. Al suo interno, la matrice di input viene trasformata nel formato double e viene eseguito un troncamento per poter scartare gli "avanzi". Iterativamente, per ogn i blocco quadrato f x f applichiamo la dct2 e poi ritorniamo la matrice nel formato int (arrottondando o suoi valori double all'intero più vicino, mettendo a zero i valori negativi e a 255 quelli maggiori di 255). 
 
 \section{Risultati}
-Il programma è stato testato sulle immagini di prova fornite e sono stati sperimentati diversi valori dei parametri \textit{F} e \textit{d}.
+Il programma è stato testato sulle immagini di prova fornite e sono stati sperimentati diversi valori dei parametri \textit{F} e \textit{d}. \\
+
+\noindent L'immagine \textit{bridge.bmp} ha dimensione 2749 x 4049, impostando come parametri  \textit{F} = 200 e \textit{d}. = 100 non è visibile alcuna differenza nell'immagine compressa.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{../img/bridge_200_100.png}
+\caption{\textit{bridge.bmp con F = 200 e d = 100}}
+\end{figure}
+
+\noindent Tenendo fisso il parametro \textit{F} e diminuendo fortemente il valore del parametro \textit{d}, portandolo a 7, sono visibili ora nell'immagine compressa i blocchi.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{../img/bridge_200_7.png}
+\caption{\textit{bridge.bmp con F = 200 e d = 7}}
+\end{figure}
+
+\newpage
+\noindent Con l'immagine \textit{deer.bmp}, di dimensione 4043x2641 abbiamo voluto sperimentare con un valore di \textit{F} maggiore, pari a 250, e con valori di \textit{d} bassi.
+Impostando \textit{d} = 50 l'immagine risulta lievemente sgranata.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{../img/bambi_250_50.png}
+\caption{\textit{deer.bmp con F = 250 e d = 50}}
+\end{figure}
+
+Abbassando il valore di \textit{d} a 9 sono visibili i blocchi.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{../img/bambi_250_9.png}
+\caption{\textit{deer.bmp con F = 250 e d = 9}}
+\end{figure}
+
+\newpage
+Per l'immagine \textit{cathedral.bmp} (2000x3008) abbiamo voluto testare valori di \textit{F} piccoli con valori di \textit{d} relativamente vicini.
+Ponendo \textit{F} = 20 e \textit{d} = 15 otteniamo un'immagine che non sembra differire dall'originale se non per una luminosità maggiore.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{../img/cathedral_20_15.png}
+\caption{\textit{cathedral.bmp con F = 20 e d = 15}}
+\end{figure}
+
+Abbiamo successivamente impostato \textit{F} = 10 ed abbiamo assegnato a \textit{d} un valore maggiore, 17. L'immagine risulta pressoché identica.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{../img/cathedral_10_17.png}
+\caption{\textit{cathedral.bmp con F = 10 e d = 17}}
+\end{figure}
 
 \printbibliography
 
