@@ -4,6 +4,7 @@
 namespace test
 {
     void test_project_matrix();
+    void compare_DCT2_algorithms_Pow2();
     void compare_DCT2_algorithms();
 }
 

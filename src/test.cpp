@@ -30,7 +30,7 @@ void test::test_project_matrix()
     assert(test.isApprox(testDCT2_after_IDCT2));
 }
 
-void test::compare_DCT2_algorithms()
+void test::compare_DCT2_algorithms_Pow2()
 {
     double dist = 100;
 
@@ -142,6 +142,96 @@ void test::compare_DCT2_algorithms()
     outCSV << strCustom.substr(0, strCustom.size() - 1) + '\n';
     outCSV << strFast.substr(0, strFast.size() - 1) + '\n';
     outCSV << strLee.substr(0, strLee.size() - 1) + '\n';
+
+}
+
+void test::compare_DCT2_algorithms()
+{
+    double dist = 100;
+
+    std::ofstream outCSV;
+
+    std::string strCol = "DCT2_algorithm,";
+    std::string strCustom = "Custom,";
+    std::string strFast = "Fast,";
+    int round = 5;
+
+    std::mt19937 gen(11764244);
+    std::uniform_real_distribution<double> dis(INT_MIN, INT_MAX);
+
+    for(size_t i = 8; i<=4096; i*=2)
+    {
+        int internal_check = 0;
+
+        double meanDurationCustom = 0;
+        double meanDurationFast = 0;
+        int n = 0;
+        int dimension = i+1;
+
+        std::chrono::_V2::steady_clock::time_point start =  std::chrono::_V2::steady_clock::now();
+
+        while(internal_check<round)
+        {
+            Eigen::MatrixXd test = Eigen::MatrixXd::NullaryExpr(dimension,dimension,[&](){return dis(gen);});
+
+            std::chrono::_V2::system_clock::time_point t1;
+            std::chrono::_V2::system_clock::time_point t2;
+
+            double durationCustom = 0;
+            double durationFast = 0;
+
+            n++;
+
+            //DCT2 Custom version
+            {
+                t1 = std::chrono::high_resolution_clock::now();
+                Eigen::MatrixXd test_after_DCT2_custom = DCT2::DCT2_mt(test);
+                t2 = std::chrono::high_resolution_clock::now();
+
+                durationCustom = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / 1000;
+
+            }
+
+            //DCT2 Fast version
+            {
+                t1 = std::chrono::high_resolution_clock::now();
+                Eigen::MatrixXd test_after_DCT2_fast = DCT2Fast::DCT2Fast_mt(test);
+                t2 = std::chrono::high_resolution_clock::now();
+
+                durationFast = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / 1000;
+
+            }
+
+            double tmp_meanDurationCustom = meanDurationCustom;
+            double tmp_meanDurationFast = meanDurationFast;
+
+            meanDurationCustom = tmp_meanDurationCustom + ((durationCustom - tmp_meanDurationCustom) / n);
+            meanDurationFast = tmp_meanDurationFast + ((durationFast - tmp_meanDurationFast) / n);
+
+            if (std::chrono::_V2::steady_clock::now() - start > std::chrono::seconds(1800))
+                break;
+
+            if ((abs(meanDurationCustom - tmp_meanDurationCustom) < dist) &
+                    (abs(meanDurationFast - tmp_meanDurationFast) < dist))
+            {
+                ++internal_check;
+            }
+            else
+            {
+                internal_check = 0;
+            }
+        } //end While
+
+        strCol = strCol + std::to_string(dimension) + ",";
+        strCustom = strCustom + std::to_string(meanDurationCustom) + ",";
+        strFast = strFast + std::to_string(meanDurationFast) + ",";
+        std::cout << dimension << ":" << n << std::endl;
+    } // end For
+
+    outCSV.open("Results.csv");
+    outCSV << strCol.substr(0, strCol.size() - 1) + '\n';
+    outCSV << strCustom.substr(0, strCustom.size() - 1) + '\n';
+    outCSV << strFast.substr(0, strFast.size() - 1) + '\n';
 
 }
 
