@@ -13,6 +13,8 @@
 #include <QGridLayout>
 #include <QBitmap>
 
+#include <include/my_qlabel.h>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -36,9 +38,25 @@ MainWindow::MainWindow(QWidget *parent)
     ui->img_2->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     ui->img_2->setScaledContents(true);
 
+    //Setup image area 3
+    ui->scrollArea_2->takeWidget();
+    ui->scrollArea_2->setWidget(ui->lblMouse);
+    ui->lblMouse->setBackgroundRole(QPalette::Base);
+    ui->lblMouse->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    ui->lblMouse->setScaledContents(true);
+
     statusLabel = new QLabel(this);
     statusLabel->setText("Ready...");
     ui->statusbar->addWidget(statusLabel, 1);
+
+    statusLabel_2 = new QLabel(this);
+    statusLabel_2->setText("");
+    ui->statusbar->addWidget(statusLabel_2, 1);
+
+
+    connect(ui->lblMouse, SIGNAL(Mouse_Pos()), this, SLOT(mouse_current_pos()));
+    connect(ui->lblMouse, SIGNAL(Mouse_Pressed()), this, SLOT(mouse_pressed()));
+    connect(ui->lblMouse, SIGNAL(Mouse_Left()), this, SLOT(mouse_left()));
 }
 
 MainWindow::~MainWindow()
@@ -48,6 +66,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::openBMP()
 {
+    ui->lblMouse->clear();
+    ui->lblMouse->repaint();
+
     QString fname = QFileDialog::getOpenFileName(this, tr("Select image"), "/git/dct2", tr("Image Files (*.bmp)"));
     try {
         QImage img = QImage(fname);
@@ -69,13 +90,16 @@ void MainWindow::openBMP()
 
 void MainWindow::on_parameters_clicked()
 {
-    statusLabel->setText("Processing...");
-    statusLabel->repaint();
+    statusLabel_2->setText("Processing...");
+    statusLabel_2->repaint();
 
     const QPixmap* p = ui->img->pixmap();
 
     ui->img_2->clear();
     ui->img_2->repaint();
+
+    ui->lblMouse->clear();
+    ui->lblMouse->repaint();
 
     if (!p){
         QMessageBox msgBox;
@@ -105,7 +129,8 @@ void MainWindow::on_parameters_clicked()
         Eigen::MatrixXi out = Compress::DCTCompress(in, F, d, DCTFunct);
         QPixmap result = matrixToPixmap(out);
         ui->img_2->setPixmap(result);
-        statusLabel->setText(tr("Done!"));
+        ui->lblMouse->setPixmap(result);
+        statusLabel_2->setText("Done!");
     } catch (const std::exception &e) {
         QMessageBox msgBox;
         msgBox.setText(e.what());
@@ -171,4 +196,47 @@ void MainWindow::on_rb_Naive_toggled(bool checked)
 {
     if (checked)
         DCTFunct = Compress::Naive_custom;
+}
+
+void MainWindow::mouse_current_pos()
+{
+    if(ui->lblMouse->pixmap()!=0){
+        int x = ui->lblMouse->x;
+        int y = ui->lblMouse->y;
+
+        int widthBox = ui->scrollArea_2->width();
+        int heightBox = ui->scrollArea_2->height();
+
+        double pX = (100 * x) / widthBox;
+        double pY = (100 * y) / heightBox;
+
+        int widthPic = ui->lblMouse->pixmap()->width();
+        int heightPic = ui->lblMouse->pixmap()->height();
+
+        int valX = (pX * widthPic) / 100;
+        int valY = (pY * heightPic) / 100;
+
+        QImage image = ui->lblMouse->pixmap()->toImage();
+        QRgb pixColor = image.pixel(valX,valY);
+        statusLabel_2->setText(QString("x = %1, y = %2 \t Gray Value = %3").arg(valX).arg(valY).arg(qGray(pixColor)));
+    }
+
+
+}
+
+void MainWindow::mouse_pressed()
+{
+    if(ui->lblMouse->pixmap()!=0){
+        ui->scrollArea_2->setWidget(ui->lblMouse);
+        const QPixmap* p = ui->img->pixmap();
+        ui->lblMouse->setPixmap(*p);
+    }
+}
+
+void MainWindow::mouse_left()
+{
+    if(ui->lblMouse->pixmap()!=0){
+        const QPixmap* p = ui->img_2->pixmap();
+        ui->lblMouse->setPixmap(*p);
+    }
 }

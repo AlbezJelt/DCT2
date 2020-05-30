@@ -24,6 +24,7 @@ SOURCES += \
     src/DCTFast/FftRealPair.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
+    src/my_qlabel.cpp \
     src/test.cpp
 
 HEADERS += \
@@ -35,7 +36,8 @@ HEADERS += \
     include/DCTFast/FftRealPair.h \
     include/Eigen/Core \
     include/mainwindow.h \
-    include/test.h
+    include/test.h \
+    include/my_qlabel.h
 
 FORMS += \
     form/mainwindow.ui

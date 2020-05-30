@@ -35,9 +35,16 @@ private slots:
 
     void on_rb_Naive_toggled(bool checked);
 
+    void mouse_current_pos();
+
+    void mouse_pressed();
+
+    void mouse_left();
+
 private:
     Ui::MainWindow *ui;
     QLabel *statusLabel;
+    QLabel *statusLabel_2;
     std::string strMsg;
     Compress::DCTFunction DCTFunct = Compress::Fast_Fft;
 

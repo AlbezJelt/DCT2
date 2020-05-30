@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>840</width>
-    <height>542</height>
+    <width>860</width>
+    <height>622</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,8 +33,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>404</width>
-             <height>424</height>
+             <width>414</width>
+             <height>524</height>
             </rect>
            </property>
            <widget class="QLabel" name="img">
@@ -63,11 +63,14 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>404</width>
-             <height>424</height>
+             <width>414</width>
+             <height>524</height>
             </rect>
            </property>
            <widget class="QLabel" name="img_2">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="geometry">
              <rect>
               <x>150</x>
@@ -78,6 +81,28 @@
             </property>
             <property name="text">
              <string/>
+            </property>
+           </widget>
+           <widget class="my_qlabel" name="lblMouse">
+            <property name="geometry">
+             <rect>
+              <x>20</x>
+              <y>19</y>
+              <width>361</width>
+              <height>411</height>
+             </rect>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::AutoText</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
             </property>
            </widget>
           </widget>
@@ -167,8 +192,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>840</width>
-     <height>27</height>
+     <width>860</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -200,6 +225,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>my_qlabel</class>
+   <extends>QLabel</extends>
+   <header location="global">my_qlabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../res/res.qrc"/>
  </resources>
