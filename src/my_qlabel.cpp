@@ -10,6 +10,7 @@ void my_qlabel::mouseMoveEvent(QMouseEvent *ev)
 {
     this->x = ev->x();
     this->y = ev->y();
+
     emit Mouse_Pos();
 }
 
