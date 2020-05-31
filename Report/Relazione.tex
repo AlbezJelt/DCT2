@@ -284,6 +284,13 @@ Il programma utilizza le seguenti classi da noi implementate:
 \section{Esecuzione del programma}
 Una volta avviato il programma, è possibile caricare l'immagine .bmp dal filesystem attraverso un apposito tasto ed inserire i valori di F e d. Una volta inseriti i parametri, tramite il pulsante \textit{Process} viene chiamato il metodo \textit{on\_parameters\_clicked()}, che dopo aver controllato se F e d rispettano tutti i vincoli (F positivo, d compreso fra 0 e 2F - 2), trasforma con la funzione \textit{pixmapToMatrix()} l'immagine in una matrice e la invia alla classe \textit{Compress.cpp}. In essa l'immagine viene divisa in blocchi e a ognuno di questi viene applicata la DCT2, restituendo poi una matrice che viene passata alla funzione \textit{matrixToPixmap()} per poter essere visualizzata in output nell'interfaccia grafica.\\
 In particolare la classe \textit{Compress.cpp} prende in input una matrice di interi e i parametri F e d e restituisce in output una nuova matrice di interi. Al suo interno, la matrice di input viene trasformata in formato double e viene eseguito un troncamento per poter scartare gli "avanzi". Iterativamente, per ogni blocco quadrato F x F applichiamo la DCT2 e poi restituiamo la matrice nel formato int (arrottondando i valori double all'intero più vicino, mettendo a 0 i valori negativi e a 255 quelli maggiori di 255). 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{../img/open.png}
+\caption{\textit{Finestra di caricamento immagine da filesystem}}
+\end{figure}
+
 \newpage
 \section{Risultati}
 Il programma è stato testato sulle immagini di prova fornite e sono stati sperimentati diversi valori dei parametri \textit{F} e \textit{d}, utilizzando la libreria \textit{Fast DCT}.\\
@@ -339,6 +346,23 @@ Ponendo \textit{F} = 20 e \textit{d} = 15 otteniamo un'immagine che non sembra d
 \caption{\textit{cathedral.bmp con F = 10 e d = 17}}
 \end{figure}
 
+\newpage
+
+\noindent Abbiamo testato i casi limite su un'immagine scaricata da noi. Abbiamo assegnato a \textit{F} un valore casuale (in queso caso 10) e a \textit{d} il valore 0. In questo modo abbiamo dimostrato che vengono eliminate tutte le frequenze.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\linewidth]{../img/bridge2_10_0.png}
+\caption{\textit{bridge2.bmp con F = 10 e d = 0}}
+\end{figure}
+
+\noindent In questo secondo caso, ponendo \textit{d} = 2F - 2 (in questo caso 18) viene eliminata solo la frequenza più alta.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\linewidth]{../img/bridge2_10_18.png}
+\caption{\textit{bridge2.bmp con F = 10 e d = 18}}
+\end{figure}
 \printbibliography
 
 \end{document}

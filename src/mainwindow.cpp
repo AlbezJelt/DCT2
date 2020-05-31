@@ -130,9 +130,9 @@ void MainWindow::on_parameters_clicked()
         return;
     }
     int d = ui->writeD->text().toInt();
-    if (!(d > 0 && d < (2*F - 2))){
+    if (!(d >= 0 && d <= (2*F - 2))){
         QMessageBox msgBox;
-        msgBox.setText("d is not correct. It must be d < (2f - 2)");
+        msgBox.setText("d is not correct. It must be d <= (2f - 2)");
         msgBox.exec();
         statusLabel->setText(tr(strMsg.c_str()));
         return;
