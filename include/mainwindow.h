@@ -42,8 +42,6 @@ private slots:
     void mouse_pressed();
     void mouse_left();
 
-    void on_Mirror_stateChanged(int arg1);
-
 private:
     Ui::MainWindow *ui;
     QLabel *statusLabel;

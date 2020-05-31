@@ -259,26 +259,34 @@ Invece di applicare direttamente la formula DCT (o scomporla come mostrato da Le
 %\label{fig:2}
 \end{figure}
 Per poter rappresentare graficamente il confronto fra l'algoritmo di DCT2 da noi implementato (\textit{Custom}), e la versione DCT2 dell'algoritmo fast della libreria Lee (\textit{Lee}) e l'algoritmo che sfrutta la fast Fourier transform (\textit{Fast}) è stato utilizzato un grafico a linee con indicatori, ponendo sull'asse delle ascisse la dimensioni delle matrice quadrate (sono state utilizzate dimensioni in potenza di 2 per poter eseguire il codice di Lee) e sulle ordinate il tempo impiegato, espresso in scala logaritmica. \\
-Si può notare chiaramente che la crescita del tempo impiegato dall'algoritmo Custom è esponenziale rispetto all'andamento similare che hanno gli algoritmi Fast e Lee. %è giusto dire esponenziale? o meglio controllare se effettivamente è O n^3?
+Si può notare chiaramente che la crescita del tempo impiegato dall'algoritmo Custom è esponenziale rispetto all'andamento similare che hanno gli algoritmi Fast e Lee. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.77\linewidth]{../img/customvsfast.png}
+\caption{\textit{Confronto DCT2 custom e Fast DCT}}
+%\label{fig:2}
+\end{figure}
+
+Abbiamo voluto sottolineare tramite questo grafico che, anche senza il vincolo imposto dalla libreria di Lee sulla dimensione della matrice, i valori ottenuti con la \textit{DCT2 custom} e la \textit{fast DCT} mantengono lo stesso andamento con matrici di dimensioni generate casualmente. 
+
 
 \mychapter{2}{Test con immagini}
-Il programma è stato scritto tramite QT, una libreria multipiattaforma per lo sviluppo di programmi che utilizzano un'interfaccia grafica (attraverso l'uso di widget) che utlizza il linguaggio C++ (motivo per il quale abbiamo deciso di utilizzarlo).\\
-Nella seconda parte del progetto, il programma utilizza le seguenti classi scritte da noi:
+Nella seconda parte del progetto l'interfaccia grafica è stata scritta tramite QT, una libreria multipiattaforma per lo sviluppo di programmi che utilizzano un'interfaccia (attraverso l'uso di widget) che si basa sul linguaggio C++ (motivo per il quale abbiamo deciso di utilizzarla).\\
+Il programma utilizza le seguenti classi da noi implementate:
 \begin{itemize}
 \item \textbf{main.cpp}, la quale si occupa di eseguire l'intero corpo del programma;
-\item \textbf{compress.cpp}, la quale data un' immagine x esegue delle iterazioni per creare delle sottomatrici che verrano utilizzate poi dalla libreria Fast DCT. Inoltre, una volta che la libreria dct2 esegue il calcolo, questa classe si occupa di ricomporre l'immagine finale;
-%\item DCT2.cpp, classe creata ad hoc da noi che implementa la funzione della DCT2 (scrivere meglio);
+\item \textbf{Compress.cpp}, che data una matrice \textit{x} crea iterativamente delle sottomatrici. Queste saranno poi passate alla libreria \textit{Fast DCT} per eseguire la compressione e ottenere come risultato finale l'immagine compressa. Inoltre, abbiamo aggiunto la possibilità di eseguire questa operazione anche attraverso la \textit{libreria di Lee} e la \textit{custom DCT2}.
 \item \textbf{mainwindow.cpp}, classe che gestisce tutti gli aspetti e i trigger della interfaccia grafica;
-%\item test.cpp, la quale gestisce la parte di confronto generando una matrice randomica che viene eseguita sia da DCT2 e da dct2;
+\item \textbf{my\_qlabel.cpp}, classe di supporto che permette di visualizzare graficamente la quantità di dettaglio perso dell'immagine tenedo premuto sulla figura. La scelta di implementare questa classe è data dal fatto che con determinati parametri (come si potrà notare nella sezione Risultati) non è possibile notare a occhio nudo la differenza del risultato ottenuto rispetto all'immagine originale.
 \end{itemize}
-Inoltre, viene utilizzata la libreria Fast DCT nella quale ricaviamo la DCT2 operando prima per righe e poi per colonne.\\
- 
-\section{Tool di testing}
-Una volta avviato il programma, è possibile caricare l'immagine .bmp tramite un apposito tasto ed inserire i valori di f e d. Una volta inseriti i parametri, tramite il pulsante process viene chiamato il metodo on\_parameters\_clicked(), che dopo aver controllato che f e d rispettino tutti i vincoli, trasmorma l'immagine (tramite la funzione pixmapToMatrix()) in una matrice e la invia alla funzione DCTcompress. Questa funzione divide l'immagine in blocchi a ognuno del quale viene applicata la DCT2 restituendo poi una matrice che viene passata alla funzione matrixToPixmap() per poter essere visualizzata in output nell'iterfaccia grafica.\\
-In particolare la funzione compress prende in input una matrice di interi e i parametri f e d restituendo in output una matrice di interi. Al suo interno, la matrice di input viene trasformata nel formato double e viene eseguito un troncamento per poter scartare gli "avanzi". Iterativamente, per ogni blocco quadrato F x F applichiamo la dct2 e poi ritorniamo la matrice nel formato int (arrottondando i valori double all'intero più vicino, mettendo a zero i valori negativi e a 255 quelli maggiori di 255). 
+
+\section{Esecuzione del programma}
+Una volta avviato il programma, è possibile caricare l'immagine .bmp dal filesystem attraverso un apposito tasto ed inserire i valori di F e d. Una volta inseriti i parametri, tramite il pulsante \textit{Process} viene chiamato il metodo \textit{on\_parameters\_clicked()}, che dopo aver controllato se F e d rispettano tutti i vincoli (F positivo, d compreso fra 0 e 2F - 2), trasforma con la funzione \textit{pixmapToMatrix()} l'immagine in una matrice e la invia alla classe \textit{Compress.cpp}. In essa l'immagine viene divisa in blocchi e a ognuno di questi viene applicata la DCT2, restituendo poi una matrice che viene passata alla funzione \textit{matrixToPixmap()} per poter essere visualizzata in output nell'interfaccia grafica.\\
+In particolare la classe \textit{Compress.cpp} prende in input una matrice di interi e i parametri F e d e restituisce in output una nuova matrice di interi. Al suo interno, la matrice di input viene trasformata in formato double e viene eseguito un troncamento per poter scartare gli "avanzi". Iterativamente, per ogni blocco quadrato F x F applichiamo la DCT2 e poi restituiamo la matrice nel formato int (arrottondando i valori double all'intero più vicino, mettendo a 0 i valori negativi e a 255 quelli maggiori di 255). 
 \newpage
 \section{Risultati}
-Il programma è stato testato sulle immagini di prova fornite e sono stati sperimentati diversi valori dei parametri \textit{F} e \textit{d}. \\
+Il programma è stato testato sulle immagini di prova fornite e sono stati sperimentati diversi valori dei parametri \textit{F} e \textit{d}, utilizzando la libreria \textit{Fast DCT}.\\
 
 \noindent L'immagine \textit{bridge.bmp} ha dimensione 2749 x 4049, impostando come parametri  \textit{F} = 200 e \textit{d} = 100 non è visibile alcuna differenza nell'immagine compressa.
 

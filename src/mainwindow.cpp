@@ -317,14 +317,3 @@ void MainWindow::mouse_left()
         ui->lblMouse->setPixmap(*p);
     }
 }
-
-void MainWindow::on_Mirror_stateChanged(int arg1)
-{
-    std::cout << arg1 << std::endl;
-
-    if (arg1 == 2) {
-        std::cout << "ok" << std::endl;
-    } else if (arg1 == 0){
-        std::cout << "not ok" << std::endl;
-    }
-}
