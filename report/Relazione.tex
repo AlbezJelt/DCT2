@@ -10,6 +10,8 @@
 \usepackage{fullpage}
 \renewcommand*\contentsname{Indice}
 \renewcommand{\lstlistingname}{Listato}
+\renewcommand{\figurename}{Figura}
+\renewcommand{\bibname}{Bibliografia}
 \usepackage{setspace}
 \usepackage{parskip}
 \usepackage{amsmath}
@@ -178,7 +180,7 @@ void DCT2::IDCT(Eigen::VectorXd &_c)
 
 \section{DCT2 e IDCT2}
 La DCT2 è una trasformazione a due dimensioni, ottenuta semplicemente applicando la DCT mono-dimensionale prima per righe e poi per colonne (o viceversa).\\
-La definizione della DCT bi-dimensionale per una matrice A di dimensione \textit{m x n} in input è:\\
+La definizione della DCT bi-dimensionale per una matrice A di dimensione \textit{m} x \textit{n} in input è:\\
 \begin{align*}
 C_{kl} = \alpha_k \alpha_l \sum_{i=0}^{m-1} \sum_{j=0}^{n-1}&A_{ij} \cos \left[\frac{\pi \left(2i + 1\right) k }{2m}\right] \cos \left[\frac{\pi \left(2j + 1\right) l }{2n}\right],\\
 &con \quad 0 \leq k \leq m - 1, \quad 0 \leq l \leq n - 1,\\
@@ -187,7 +189,18 @@ C_{kl} = \alpha_k \alpha_l \sum_{i=0}^{m-1} \sum_{j=0}^{n-1}&A_{ij} \cos \left[\
 L'inversa di tale trasformazione è la IDCT2, ottenuta applicando IDCT alle due dimensioni.
 
 \subsection*{Implementazione}
-Anche in questo caso Eigen è stato utilizzato per mantenere la struttura dati tramite un oggetto \textit{Eigen::MatrixXd}. L'implementazione non sfrutta direttamente la definizione, ma computa la DCT2/IDCT2 prima sulle righe e poi sulle colonne della matrice in input. Inoltre, essendo l'elaborazione di ogni vettore indipendente dagli altri è possibile parallelizzarne la computazione. Per procedere con il calcolo in parallelo abbiamo aggiunto la direttiva \textit{\# pragma omp parallel} prima del for così da computare la DCT2 sulle sottomatrici quadrate in maniera concorrente. \\
+Anche in questo caso Eigen è stato utilizzato per mantenere la struttura dati tramite un oggetto \textit{Eigen::MatrixXd}. L'implementazione non sfrutta direttamente la definizione, ma computa la DCT2/IDCT2 prima sulle righe e poi sulle colonne della matrice in input. Inoltre, essendo l'elaborazione di ogni vettore indipendente dalle altre, è possibile parallelizzarne la computazione. La direttiva \textit{\# pragma omp parallel for} prima dei due cicli abilita la computazione concorrente della DCT sulle due dimensioni della matrice in input. \\
+Dunque tale calcolo comporta l'esecuzione di una routine DCT su N righe e M colonne di una matrice, determinando un costo computazionale di:\\
+\[ 
+  \begin{cases} 
+   O(N^2) O(N+M) = O(N^3) & \textit{se DCT di tipo II o III} \\
+   O(N\log{N}) O(N+M) = O(N^2\log{N}) & \textit{se DCT versione fast (FCT)} 
+  \end{cases}
+\]
+\hfill \break
+\hfill \break
+\hfill \break
+\hfill \break
 \begin{lstlisting}[caption={Funzione di calcolo DCT2},captionpos=b]
 	Eigen::MatrixXd DCT2::DCT2_mt(Eigen::MatrixXd &_m)
 	{
@@ -214,7 +227,7 @@ Anche in questo caso Eigen è stato utilizzato per mantenere la struttura dati t
 		return out;
 	}
 \end{lstlisting}
-\newpage
+\hfill \break
 \begin{lstlisting}[caption={Funzione di calcolo IDCT2},captionpos=b]
 	Eigen::MatrixXd DCT2::IDCT2_mt(Eigen::MatrixXd &_m)
 	{
@@ -241,6 +254,7 @@ Anche in questo caso Eigen è stato utilizzato per mantenere la struttura dati t
 		return out;
 	}
 \end{lstlisting}
+\newpage
 
 \section{Varianti DCT}
 Esistono diverse varianti della DCT che riducono la complessita a \(O(NlogN)\). Tali metodi sono conosciuti come \textit{fast DCT} o \textit{FCT} in quanto appunto migliorano notevolmente il costo computazionale.\\Di seguito vengono citate due delle più comuni.
@@ -249,18 +263,41 @@ Esistono diverse varianti della DCT che riducono la complessita a \(O(NlogN)\). 
 Descritta da Byeong Gi Lee \cite{Lee} nel 1984 è uno degli algoritmi fast DCT per \(2^m\) punti più comune. Utilizza una struttura ricorsiva dove la trasformazione DCT è decomposta in una parte pari e una dispari. Queste parti sono a loro volta decomposte nello stesso modo finchè non sono abbastanza piccole (m=1) da essere calcolate tramite valutazione diretta \cite{LAGERSTRM2001DesignAI}.
 
 \subsubsection*{Fast DCT FFT}
-Invece di applicare direttamente la formula DCT (o scomporla come mostrato da Lee) è possibile fattorizzare la computazione in modo simile alla \textit{fast Fourier transform} (FFT). Gli algoritmi basati sull'algoritmo di Cooley-Tukey \cite{10.2307/2003354} sono i piu comuni, ma qualunque altro algoritmo FFT è applicabile. 
+Invece di applicare direttamente la formula DCT (o scomporla come mostrato da Lee) è possibile fattorizzare la computazione in modo simile alla \textit{fast Fourier transform} (FFT). Gli algoritmi basati sull'\textit{algoritmo di Cooley-Tukey} \cite{10.2307/2003354} per \(2^m\) punti sono i piu comuni, ma qualunque altro algoritmo FFT è applicabile. Per esempio l'\textit{algoritmo FFT di Bluestein} (o \textit{algoritmo chirp-z}) permette di computare per una qualunque dimensione.\\\\
+
+Gli algoritmi fast utilizzati nei confronti e test successivi provengono dal Project Nayuki \cite{nayuki}, modificati in modo da essere compatibili con gli oggetti Eigen. La versione FFT, in base alla dimensione in input, utilizza i due algoritmi sopra citati.\\
+Come riportato dall'autore "non è difficile utilizzare una FFT per computare una fast DCT che elabori in tempo \(O(N\log{N})\), ma tale approccio introduce un piccolo fattore costante di penalità in tempo e spazio per memorizzare e computare numeri ridondanti".\\Gli algoritmi sono reperibili con una serie di Unit test che ne provano il corretto funzionamento.
 
 \section{Confronto}
+I dati utilizzati per generare i grafici seguenti sono stati raccolti applicando i vari algoritmi DCT2 su matrici random di dimensione fissata. Per ogni dimensione il tempo risultante è una media risultante da \textit{X} esecuzioni degli algoritmi, eseguiti finchè il tempo medio calcolato non si discostasse piu da una certa soglia \textit{dist} per un determinato numero \textit{round} di iterazioni.
+
+\subsubsection*{Dimensioni potenze di 2}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.77\linewidth]{../img/comparison.png}
 \caption{\textit{Confronto DCT2 custom, Fast DCT di Lee e Fast DCT FFT}}
 %\label{fig:2}
 \end{figure}
+\begin{center}
+	\begin{tabular}{ |p{4cm}||p{2cm}|p{2cm}|p{2.5cm}|  }
+		\hline
+		\multicolumn{4}{|c|}{Vincoli} \\
+		\hline
+		Dimensione matrice& dist [ms] & round & time\_limit [s]\\
+		\hline
+		8 - 256   & 100    &5&   3600\\
+		512 - 2048&   500  & 5   &3600\\
+		4096 &500 & 2&  3600\\
+		\hline
+	\end{tabular}
+\end{center}
+\hfill \break
+\hfill \break
 Per poter rappresentare graficamente il confronto fra l'algoritmo di DCT2 da noi implementato (\textit{Custom}), e la versione DCT2 dell'algoritmo fast della libreria Lee (\textit{Lee}) e l'algoritmo che sfrutta la fast Fourier transform (\textit{Fast}) è stato utilizzato un grafico a linee con indicatori, ponendo sull'asse delle ascisse la dimensioni delle matrice quadrate (sono state utilizzate dimensioni in potenza di 2 per poter eseguire il codice di Lee) e sulle ordinate il tempo impiegato, espresso in scala logaritmica. \\
 Si può notare chiaramente che la crescita del tempo impiegato dall'algoritmo Custom è esponenziale rispetto all'andamento similare che hanno gli algoritmi Fast e Lee. 
 
+\subsubsection*{Altre dimensioni}
+Valori fissi \(dist=100ms\), \(round=5\) e \(time\_limit=1800s\).
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.77\linewidth]{../img/customvsfast.png}
@@ -268,7 +305,7 @@ Si può notare chiaramente che la crescita del tempo impiegato dall'algoritmo Cu
 %\label{fig:2}
 \end{figure}
 
-Abbiamo voluto sottolineare tramite questo grafico che, anche senza il vincolo imposto dalla libreria di Lee sulla dimensione della matrice, i valori ottenuti con la \textit{DCT2 custom} e la \textit{fast DCT} mantengono lo stesso andamento con matrici di dimensioni generate casualmente. 
+Tale grafico dimostra che, anche senza il vincolo imposto dall'algoritmo di Lee sulla dimensione della matrice, i valori ottenuti con la \textit{DCT2 custom} e la \textit{fast DCT} mantengono lo stesso andamento con matrici di dimensioni incrementali. 
 
 
 \mychapter{2}{Test con immagini}
