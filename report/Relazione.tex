@@ -116,7 +116,7 @@ Nella seconda parte viene documentato un semplice tool per applicare su immagini
 \mychapter{1}{Analisi DCT}
 
 \section{Discrete Cosine Transform}
-Una DCT esprime una sequenza finita di punti in termini di una somma di funzioni coseno oscillanti a diverse frequenze. Ad oggi è una delle tecniche di trasformazione più utlizzate nella Teoria dei segnali e nella compressione dei dati, in particolare nei media digitali (audio, video, radio ecc..).\\
+Una DCT esprime una sequenza finita di punti in termini di una somma di funzioni coseno oscillanti a diverse frequenze. Ad oggi è una delle tecniche di trasformazione più utilizzate nella Teoria dei segnali e nella compressione dei dati, in particolare nei media digitali (audio, video, radio ecc..).\\
 In queste applicazioni infatti la maggior parte delle informazioni significative tendono a essere concentrate in poche componenti a bassa frequenza della DCT. Questo permette di comprimere a piacere il dato scartando le componenti ad alta frequenza (compressione lossy).
 
 \section{DCT e IDCT}
@@ -258,13 +258,13 @@ Dunque tale calcolo comporta l'esecuzione di una routine DCT su N righe e M colo
 \newpage
 
 \section{Varianti DCT}
-Esistono diverse varianti della DCT che riducono la complessita a \(O(NlogN)\). Tali metodi sono conosciuti come \textit{fast DCT} o \textit{FCT} in quanto appunto migliorano notevolmente il costo computazionale.\\Di seguito vengono citate due delle più comuni.
+Esistono diverse varianti della DCT che riducono la complessità a \(O(NlogN)\). Tali metodi sono conosciuti come \textit{fast DCT} o \textit{FCT} in quanto appunto migliorano notevolmente il costo computazionale.\\Di seguito vengono citate due delle più comuni.
 
 \subsubsection*{Fast DCT di Lee}
 Descritta da Byeong Gi Lee \cite{Lee} nel 1984 è uno degli algoritmi fast DCT per \(2^m\) punti più comune. Utilizza una struttura ricorsiva dove la trasformazione DCT è decomposta in una parte pari e una dispari. Queste parti sono a loro volta decomposte nello stesso modo finchè non sono abbastanza piccole (m=1) da essere calcolate tramite valutazione diretta \cite{LAGERSTRM2001DesignAI}.
 
 \subsubsection*{Fast DCT FFT}
-Invece di applicare direttamente la formula DCT (o scomporla come mostrato da Lee) è possibile fattorizzare la computazione in modo simile alla \textit{fast Fourier transform} (FFT). Gli algoritmi basati sull'\textit{algoritmo di Cooley-Tukey} \cite{10.2307/2003354} per \(2^m\) punti sono i piu comuni, ma qualunque altro algoritmo FFT è applicabile. Per esempio l'\textit{algoritmo FFT di Bluestein} (o \textit{algoritmo chirp-z}) permette di computare per una qualunque dimensione.\\
+Invece di applicare direttamente la formula DCT (o scomporla come mostrato da Lee) è possibile fattorizzare la computazione in modo simile alla \textit{fast Fourier transform} (FFT). Gli algoritmi basati sull'\textit{algoritmo di Cooley-Tukey} \cite{10.2307/2003354} per \(2^m\) punti sono i più comuni, ma qualunque altro algoritmo FFT è applicabile. Per esempio l'\textit{algoritmo FFT di Bluestein} (o \textit{algoritmo chirp-z}) permette di computare per una qualunque dimensione.\\
 
 \noindent Gli algoritmi fast utilizzati nei confronti e test successivi provengono dal Project Nayuki \cite{nayuki}, modificati in modo da essere compatibili con gli oggetti Eigen. La versione FFT, in base alla dimensione in input, utilizza i due algoritmi sopra citati.\\
 Come riportato dall'autore "non è difficile utilizzare una FFT per computare una fast DCT che elabori in tempo \(O(N\log{N})\), ma tale approccio introduce un piccolo fattore costante di penalità in tempo e spazio per memorizzare e computare numeri ridondanti".\\Gli algoritmi sono reperibili con una serie di Unit test che ne provano il corretto funzionamento.
@@ -318,14 +318,14 @@ Nella seconda parte del progetto l'interfaccia grafica è stata scritta tramite 
 \item \textbf{main.cpp}, la quale si occupa di eseguire l'intero corpo del programma;
 \item \textbf{Compress.cpp}, che data una matrice \textit{x} crea iterativamente delle sottomatrici. Queste saranno poi passate alla libreria \textit{Fast DCT} per eseguire la compressione e ottenere come risultato finale l'immagine compressa. Inoltre, abbiamo aggiunto la possibilità di eseguire questa operazione anche attraverso la \textit{libreria di Lee} e la \textit{custom DCT2}.
 \item \textbf{mainwindow.cpp}, classe che gestisce tutti gli aspetti e i trigger della interfaccia grafica;
-\item \textbf{my\_qlabel.cpp}, classe di supporto che permette di visualizzare graficamente la quantità di dettaglio perso dell'immagine tenedo premuto sulla figura. La scelta di implementare questa classe è data dal fatto che con determinati parametri (come si potrà notare nella sezione Risultati) non è possibile notare a occhio nudo la differenza del risultato ottenuto rispetto all'immagine originale.
+\item \textbf{my\_qlabel.cpp}, classe di supporto che permette di visualizzare graficamente la quantità di dettaglio perso dell'immagine tenendo premuto sulla figura. La scelta di implementare questa classe è data dal fatto che con determinati parametri (come si potrà notare nella sezione Risultati) non è possibile notare a occhio nudo la differenza del risultato ottenuto rispetto all'immagine originale.
 \end{itemize}
 
 \section{Esecuzione del programma}
 Una volta avviato il programma, è possibile caricare l'immagine .bmp dal filesystem attraverso un apposito tasto e inserire i valori di F e d. Una volta inseriti i parametri, tramite il pulsante \textit{Process} viene chiamato il metodo \textit{on\_parameters\_clicked()}, che dopo aver controllato se F e d rispettano tutti i vincoli (F positivo, d compreso fra 0 e 2F - 2), trasforma con la funzione \textit{pixmapToMatrix()} l'immagine in una matrice e la invia alla classe \textit{Compress.cpp}. In essa l'immagine viene divisa in blocchi e a ognuno di questi viene applicata la DCT2, restituendo poi una matrice che viene passata alla funzione \textit{matrixToPixmap()} per poter essere visualizzata in output nell'interfaccia grafica.
 \bigskip
 
-\noindent In particolare la classe \textit{Compress.cpp} prende in input una matrice di interi e i parametri F e d e restituisce in output una nuova matrice di interi. Al suo interno, la matrice di input viene trasformata in formato double e viene eseguito un troncamento per poter scartare gli "avanzi". Iterativamente, per ogni blocco quadrato F x F applichiamo la DCT2 e poi restituiamo la matrice nel formato int (arrottondando i valori double all'intero più vicino, mettendo a 0 i valori negativi e a 255 quelli maggiori di 255). 
+\noindent In particolare la classe \textit{Compress.cpp} prende in input una matrice di interi e i parametri F e d e restituisce in output una nuova matrice di interi. Al suo interno, la matrice di input viene trasformata in formato double e viene eseguito un troncamento per poter scartare gli "avanzi". Iterativamente, per ogni blocco quadrato F x F applichiamo la DCT2 e poi restituiamo la matrice nel formato int (arrotondando i valori double all'intero più vicino, mettendo a 0 i valori negativi e a 255 quelli maggiori di 255). 
 
 \begin{figure}[H]
 \centering
@@ -392,7 +392,7 @@ Ponendo \textit{F} = 20 e \textit{d} = 15 otteniamo un'immagine che non sembra d
 
 \newpage
 
-\noindent Abbiamo testato i casi limite su un'immagine scaricata da noi. Abbiamo assegnato a \textit{F} un valore casuale (in queso caso 10) e a \textit{d} il valore 0. In questo modo abbiamo dimostrato che vengono eliminate tutte le frequenze.
+\noindent Abbiamo testato i casi limite su un'immagine scaricata da noi. Abbiamo assegnato a \textit{F} un valore casuale (in questo caso 10) e a \textit{d} il valore 0. In questo modo abbiamo dimostrato che vengono eliminate tutte le frequenze.
 
 \begin{figure}[H]
 \centering
