@@ -1,5 +1,6 @@
 \documentclass[a4paper,12pt]{report}
-\usepackage[backend=biber]{biblatex}
+%\usepackage[backend=biber]{biblatex}
+\usepackage[backend=bibtex]{biblatex}
 \addbibresource{reference.bib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{float}
@@ -109,7 +110,7 @@
 \mychapter{0}{Introduzione}
 In questa relazione vengono presentate e discusse le modalità di implementazione della DCT (dall'inglese Discrete Cosine Transform), ovvero la più diffusa funzione che provvede alla compressione spaziale.\\
 Nella prima parte viene confrontata la versione nativa delle DCT implementata in questo progetto con alcune varianti fast (FFT), studiandone il costo computazionale.\\   %"Nativa" della DCT con alcune varianti conosciute, studiandone il costo computazionale.\\
-Nella seconda parte viene documentato un semplice tool per applicare su immagini in toni di grigio, tramite un approccio di compressione di tipo jpeg (senza utilizzare una matrice di quantizzazione), la funzione DCT2 implemetata. %in teoria dobbiamo usare quella della libreria (fast)
+Nella seconda parte viene documentato un semplice tool per applicare su immagini in toni di grigio, tramite un approccio di compressione di tipo jpeg (senza utilizzare una matrice di quantizzazione), utilizzando tutte le funzioni DCT2 implementate, tenendo di default quella fast.
 
 
 \mychapter{1}{Analisi DCT}
@@ -263,9 +264,9 @@ Esistono diverse varianti della DCT che riducono la complessita a \(O(NlogN)\). 
 Descritta da Byeong Gi Lee \cite{Lee} nel 1984 è uno degli algoritmi fast DCT per \(2^m\) punti più comune. Utilizza una struttura ricorsiva dove la trasformazione DCT è decomposta in una parte pari e una dispari. Queste parti sono a loro volta decomposte nello stesso modo finchè non sono abbastanza piccole (m=1) da essere calcolate tramite valutazione diretta \cite{LAGERSTRM2001DesignAI}.
 
 \subsubsection*{Fast DCT FFT}
-Invece di applicare direttamente la formula DCT (o scomporla come mostrato da Lee) è possibile fattorizzare la computazione in modo simile alla \textit{fast Fourier transform} (FFT). Gli algoritmi basati sull'\textit{algoritmo di Cooley-Tukey} \cite{10.2307/2003354} per \(2^m\) punti sono i piu comuni, ma qualunque altro algoritmo FFT è applicabile. Per esempio l'\textit{algoritmo FFT di Bluestein} (o \textit{algoritmo chirp-z}) permette di computare per una qualunque dimensione.\\\\
+Invece di applicare direttamente la formula DCT (o scomporla come mostrato da Lee) è possibile fattorizzare la computazione in modo simile alla \textit{fast Fourier transform} (FFT). Gli algoritmi basati sull'\textit{algoritmo di Cooley-Tukey} \cite{10.2307/2003354} per \(2^m\) punti sono i piu comuni, ma qualunque altro algoritmo FFT è applicabile. Per esempio l'\textit{algoritmo FFT di Bluestein} (o \textit{algoritmo chirp-z}) permette di computare per una qualunque dimensione.\\
 
-Gli algoritmi fast utilizzati nei confronti e test successivi provengono dal Project Nayuki \cite{nayuki}, modificati in modo da essere compatibili con gli oggetti Eigen. La versione FFT, in base alla dimensione in input, utilizza i due algoritmi sopra citati.\\
+\noindent Gli algoritmi fast utilizzati nei confronti e test successivi provengono dal Project Nayuki \cite{nayuki}, modificati in modo da essere compatibili con gli oggetti Eigen. La versione FFT, in base alla dimensione in input, utilizza i due algoritmi sopra citati.\\
 Come riportato dall'autore "non è difficile utilizzare una FFT per computare una fast DCT che elabori in tempo \(O(N\log{N})\), ma tale approccio introduce un piccolo fattore costante di penalità in tempo e spazio per memorizzare e computare numeri ridondanti".\\Gli algoritmi sono reperibili con una serie di Unit test che ne provano il corretto funzionamento.
 
 \section{Confronto}
@@ -305,12 +306,14 @@ Valori fissi \(dist=100ms\), \(round=5\) e \(time\_limit=1800s\).
 %\label{fig:2}
 \end{figure}
 
-Tale grafico dimostra che, anche senza il vincolo imposto dall'algoritmo di Lee sulla dimensione della matrice, i valori ottenuti con la \textit{DCT2 custom} e la \textit{fast DCT} mantengono lo stesso andamento con matrici di dimensioni incrementali. 
+\noindent Tale grafico dimostra che, anche senza il vincolo imposto dall'algoritmo di Lee sulla dimensione della matrice, i valori ottenuti con la \textit{DCT2 custom} e la \textit{fast DCT} mantengono lo stesso andamento con matrici di dimensioni incrementali. 
 
 
 \mychapter{2}{Test con immagini}
-Nella seconda parte del progetto l'interfaccia grafica è stata scritta tramite QT, una libreria multipiattaforma per lo sviluppo di programmi che utilizzano un'interfaccia (attraverso l'uso di widget) che si basa sul linguaggio C++ (motivo per il quale abbiamo deciso di utilizzarla).\\
-Il programma utilizza le seguenti classi da noi implementate:
+Nella seconda parte del progetto l'interfaccia grafica è stata scritta tramite QT, una libreria multipiattaforma per lo sviluppo di programmi che utilizzano un'interfaccia (attraverso l'uso di widget) che si basa sul linguaggio C++ (motivo per il quale abbiamo deciso di utilizzarla).
+\bigskip
+
+\noindent Il programma utilizza le seguenti classi da noi implementate:
 \begin{itemize}
 \item \textbf{main.cpp}, la quale si occupa di eseguire l'intero corpo del programma;
 \item \textbf{Compress.cpp}, che data una matrice \textit{x} crea iterativamente delle sottomatrici. Queste saranno poi passate alla libreria \textit{Fast DCT} per eseguire la compressione e ottenere come risultato finale l'immagine compressa. Inoltre, abbiamo aggiunto la possibilità di eseguire questa operazione anche attraverso la \textit{libreria di Lee} e la \textit{custom DCT2}.
@@ -319,49 +322,53 @@ Il programma utilizza le seguenti classi da noi implementate:
 \end{itemize}
 
 \section{Esecuzione del programma}
-Una volta avviato il programma, è possibile caricare l'immagine .bmp dal filesystem attraverso un apposito tasto ed inserire i valori di F e d. Una volta inseriti i parametri, tramite il pulsante \textit{Process} viene chiamato il metodo \textit{on\_parameters\_clicked()}, che dopo aver controllato se F e d rispettano tutti i vincoli (F positivo, d compreso fra 0 e 2F - 2), trasforma con la funzione \textit{pixmapToMatrix()} l'immagine in una matrice e la invia alla classe \textit{Compress.cpp}. In essa l'immagine viene divisa in blocchi e a ognuno di questi viene applicata la DCT2, restituendo poi una matrice che viene passata alla funzione \textit{matrixToPixmap()} per poter essere visualizzata in output nell'interfaccia grafica.\\
-In particolare la classe \textit{Compress.cpp} prende in input una matrice di interi e i parametri F e d e restituisce in output una nuova matrice di interi. Al suo interno, la matrice di input viene trasformata in formato double e viene eseguito un troncamento per poter scartare gli "avanzi". Iterativamente, per ogni blocco quadrato F x F applichiamo la DCT2 e poi restituiamo la matrice nel formato int (arrottondando i valori double all'intero più vicino, mettendo a 0 i valori negativi e a 255 quelli maggiori di 255). 
+Una volta avviato il programma, è possibile caricare l'immagine .bmp dal filesystem attraverso un apposito tasto ed inserire i valori di F e d. Una volta inseriti i parametri, tramite il pulsante \textit{Process} viene chiamato il metodo \textit{on\_parameters\_clicked()}, che dopo aver controllato se F e d rispettano tutti i vincoli (F positivo, d compreso fra 0 e 2F - 2), trasforma con la funzione \textit{pixmapToMatrix()} l'immagine in una matrice e la invia alla classe \textit{Compress.cpp}. In essa l'immagine viene divisa in blocchi e a ognuno di questi viene applicata la DCT2, restituendo poi una matrice che viene passata alla funzione \textit{matrixToPixmap()} per poter essere visualizzata in output nell'interfaccia grafica.
+\bigskip
+
+\noindent In particolare la classe \textit{Compress.cpp} prende in input una matrice di interi e i parametri F e d e restituisce in output una nuova matrice di interi. Al suo interno, la matrice di input viene trasformata in formato double e viene eseguito un troncamento per poter scartare gli "avanzi". Iterativamente, per ogni blocco quadrato F x F applichiamo la DCT2 e poi restituiamo la matrice nel formato int (arrottondando i valori double all'intero più vicino, mettendo a 0 i valori negativi e a 255 quelli maggiori di 255). 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{../img/open.png}
+\includegraphics[width=0.7\linewidth]{../img/open.png}
 \caption{\textit{Finestra di caricamento immagine da filesystem}}
 \end{figure}
 
 \newpage
 \section{Risultati}
-Il programma è stato testato sulle immagini di prova fornite e sono stati sperimentati diversi valori dei parametri \textit{F} e \textit{d}, utilizzando la libreria \textit{Fast DCT}.\\
+Il programma è stato testato sulle immagini di prova fornite e sono stati sperimentati diversi valori dei parametri \textit{F} e \textit{d}, utilizzando la libreria \textit{Fast DCT}.
 
 \noindent L'immagine \textit{bridge.bmp} ha dimensione 2749 x 4049, impostando come parametri  \textit{F} = 200 e \textit{d} = 100 non è visibile alcuna differenza nell'immagine compressa.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{../img/bridge_200_100.png}
+\includegraphics[width=0.65\linewidth]{../img/bridge_200_100.png}
 \caption{\textit{bridge.bmp con F = 200 e d = 100}}
 \end{figure}
 
-\noindent Tenendo fisso il parametro \textit{F} e diminuendo fortemente il valore del parametro \textit{d}, portandolo a 7, eliminando un gran numero di frequenze, sono visibili gli artefatti legati alla perdita di dettarglio.
+\noindent Fissando il valore \textit{F} e diminuendo il valore del parametro \textit{d}, portandolo a 7, eliminando un gran numero di frequenze, sono visibili gli artefatti legati alla perdita di dettaglio.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{../img/bridge_200_7.png}
+\includegraphics[width=0.65\linewidth]{../img/bridge_200_7.png}
 \caption{\textit{bridge.bmp con F = 200 e d = 7}}
 \end{figure}
 
 \noindent Con l'immagine \textit{deer.bmp}, di dimensione 4043x2641 abbiamo voluto sperimentare con un valore di \textit{F} maggiore, pari a 250, e con valori di \textit{d} bassi.
 Impostando \textit{d} = 50 l'immagine risulta lievemente sgranata.
+\bigskip
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{../img/bambi_250_50.png}
+\includegraphics[width=0.75\linewidth]{../img/bambi_250_50.png}
 \caption{\textit{deer.bmp con F = 250 e d = 50}}
 \end{figure}
 
-\noindent Abbassando il valore di \textit{d} a 9 sono visibili gli artefatti causa perdita di dettaglio.
+\noindent Abbassando il valore di \textit{d} a 9 sono visibili gli artefatti causati dalla perdita di dettaglio.
+\bigskip
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{../img/bambi_250_9.png}
+\includegraphics[width=0.75\linewidth]{../img/bambi_250_9.png}
 \caption{\textit{deer.bmp con F = 250 e d = 9}}
 \end{figure}
 
@@ -371,7 +378,7 @@ Ponendo \textit{F} = 20 e \textit{d} = 15 otteniamo un'immagine che non sembra d
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\linewidth]{../img/cathedral_20_15.png}
+\includegraphics[width=0.65\linewidth]{../img/cathedral_20_15.png}
 \caption{\textit{cathedral.bmp con F = 20 e d = 15}}
 \end{figure}
 
@@ -379,7 +386,7 @@ Ponendo \textit{F} = 20 e \textit{d} = 15 otteniamo un'immagine che non sembra d
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\linewidth]{../img/cathedral_10_17.png}
+\includegraphics[width=0.65\linewidth]{../img/cathedral_10_17.png}
 \caption{\textit{cathedral.bmp con F = 10 e d = 17}}
 \end{figure}
 
@@ -389,7 +396,7 @@ Ponendo \textit{F} = 20 e \textit{d} = 15 otteniamo un'immagine che non sembra d
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\linewidth]{../img/bridge2_10_0.png}
+\includegraphics[width=0.65\linewidth]{../img/bridge2_10_0.png}
 \caption{\textit{bridge2.bmp con F = 10 e d = 0}}
 \end{figure}
 
@@ -397,7 +404,7 @@ Ponendo \textit{F} = 20 e \textit{d} = 15 otteniamo un'immagine che non sembra d
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\linewidth]{../img/bridge2_10_18.png}
+\includegraphics[width=0.65\linewidth]{../img/bridge2_10_18.png}
 \caption{\textit{bridge2.bmp con F = 10 e d = 18}}
 \end{figure}
 \printbibliography
